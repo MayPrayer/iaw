@@ -1,0 +1,50 @@
+server:
+  port: 8071
+  servlet:
+    context-path: /admin
+
+
+#mvc 路径匹配问题 解决swagger与Knife4j 无法同时生效问题
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: dev
+  #日期格式问题解决
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
+
+#mybatis
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  configuration: # 配置驼峰命名映射
+    map-underscore-to-camel-case: true
+  typeAliasesPackage: com.mayprayer.common.domain,;com.mayprayer.common.domain.query,;com.mayprayer.common.domain.bo,;com.mayprayer.common.domain.vo,;com.mayprayer.common.domain.dto,;
+
+
+# 设置token
+token:
+  renew: false    # 是否支持续期
+  expireTime: 5 # 失效时间
+
+
+knife4j:
+  enable: true
+  #true则是生产环境不允许访问knife4j
+  production: false
+
+
+endecrypt: iPaW3VrWB7s8ikNF
+
+
+
+
+
+
+
+
+
