@@ -2,3 +2,5 @@
 */*.iml
 */*/*.iml
 
+/iaw-server/*/src/main/resources/application-prod.yml
+/iaw-server/*/target/*
