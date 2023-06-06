@@ -59,6 +59,24 @@
            <groupId>mysql</groupId>
            <artifactId>mysql-connector-java</artifactId>
        </dependency>
+
+
+       <!-- Spring Mail依赖(发送邮件) -->
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-mail</artifactId>
+       </dependency>
+
+
+       <!-- FreeMarker模板引擎-->
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-freemarker</artifactId>
+       </dependency>
+
+
+
+
    </dependencies>
 
 
