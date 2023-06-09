@@ -1,7 +1,7 @@
 server:
-  port: 8071
+  port: 8080
   servlet:
-    context-path: /admin
+    context-path: /
 
 
 #mvc 路径匹配问题 解决swagger与Knife4j 无法同时生效问题
@@ -10,7 +10,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: dev
+    active: prod
   #日期格式问题解决
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -37,7 +37,7 @@ knife4j:
   #true则是生产环境不允许访问knife4j
   production: false
 
-
+endecrypt: iPaW3VrWB7s8ikNF
 
 
 
