@@ -8,7 +8,7 @@ public class WxTextMessageDto extends WxMessgeDto{
 
     private String Content;
 
-    WxTextMessageDto(){
+   public WxTextMessageDto(){
        setMsgType(WxMsgType.Text.getCode());
     }
 
