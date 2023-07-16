@@ -40,7 +40,6 @@ public class TextMessageHandler extends AbstractMessageHandler{
             return  buildSubscribeMsg(result);
         }
         String newResult = new String((String) timedCache.get(wxTextMessageDto.getMsgId()));
-        log.info("我执行了");
         timedCache.remove(wxTextMessageDto.getMsgId());
         result = newResult ;
         return  buildSubscribeMsg(result);
