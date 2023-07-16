@@ -120,6 +120,7 @@ public class SecurityConfig {
         return http.authorizeHttpRequests()
                 .anyRequest().permitAll()
                 .and()
+                .csrf().disable()
                 .build();
 
     }
