@@ -1,5 +1,7 @@
 package com.mayprayer.system.config;
 
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SM4;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,12 @@ public class BeanConfig {
     @Bean
     SM4 getSm4(){
     return SmUtil.sm4(endecrypt.getBytes());
+    }
+
+
+    @Bean
+    TimedCache getTimeCache(){
+        return CacheUtil.newTimedCache(2592000);
     }
 
 

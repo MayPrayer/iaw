@@ -69,12 +69,11 @@ public class WxOfficialAccountController {
     @PostMapping( value = "/dispatch",consumes = MediaType.TEXT_XML_VALUE,produces = MediaType.APPLICATION_XML_VALUE)
     public Object  watch() throws  Exception{
         Map<String, String> messageMap = XmlUtil.parseXml(request.getInputStream());
-        log.info("微信收到消息为：{}",messageMap);
+        log.info("微信接受消息为：{}",messageMap);
         String reply = messageStrategyContext.reply(messageMap);
-        log.info("回复消息为：{}",reply);
+        log.info("微信回复消息为：{}",reply);
         return reply;
     }
-
 
 
 
