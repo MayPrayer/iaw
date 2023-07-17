@@ -20,8 +20,8 @@
             <hr class="soild"/>
 
             <div style="height: 130px" class="left-20">
-                <p>Hi,${toUser}!</p>
-                ${content}
+                <p>Hi,${username}!</p>
+                您的验证码为:${code}，请妥善保管！
             </div>
         </div>
         <div class="footer" style="height: 50px">

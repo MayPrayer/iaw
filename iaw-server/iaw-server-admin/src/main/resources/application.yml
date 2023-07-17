@@ -4,6 +4,7 @@ server:
     context-path: /admin
 
 
+
 #mvc 路径匹配问题 解决swagger与Knife4j 无法同时生效问题
 spring:
   mvc:
@@ -15,7 +16,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 
 #mybatis
