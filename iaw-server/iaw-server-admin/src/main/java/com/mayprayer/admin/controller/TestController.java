@@ -9,6 +9,8 @@ import com.mayprayer.common.domain.dto.email.verificationCode.VerificationCodeEm
 import com.mayprayer.common.utils.constant.Constant;
 import com.mayprayer.common.utils.response.R;
 import com.mayprayer.system.manager.email.FreeMakerEmailService;
+import com.mayprayer.system.manager.tool.BIMService;
+import com.mayprayer.system.manager.tool.QRCodeService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +19,16 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 
@@ -34,9 +40,15 @@ public class TestController {
     @Autowired
     private FreeMakerEmailService emailService;
 
+    @Autowired
+    private QRCodeService qrCodeService;
+
+    @Autowired
+    private BIMService bimService;
 
 
-    @GetMapping("test")
+
+    @GetMapping("/mail")
     public R test(MultipartFile file) {
         Template template = null;
 
@@ -78,6 +90,21 @@ public class TestController {
         return R.success(null);
     }
 
+
+    @PostMapping("/qrcode")
+    public void testCode(String url,HttpServletResponse response){
+        BufferedImage qrImage = qrCodeService.generate(url);
+    }
+
+
+
+    @PostMapping("/bim")
+    public void testBIM(){
+        BigDecimal height = new BigDecimal(182);
+        BigDecimal weight = new BigDecimal(90);
+        R calculate = bimService.calculate(height, weight);
+        log.info("{}",calculate);
+    }
 
 
 
