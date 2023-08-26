@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import {HomeOutlined} from   '@ant-design/icons-vue'
 </script>
 
 <template>
   <div>
-    你好呀
+    <a-button type="danger">你好呀 <home-outlined /></a-button>
+
+
   </div>
 </template>
 
