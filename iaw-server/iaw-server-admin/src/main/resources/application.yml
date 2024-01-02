@@ -44,6 +44,13 @@ knife4j:
 
 endecrypt: iPaW3VrWB7s8ikNF
 
+#pagehelper配置
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+
 
 
 

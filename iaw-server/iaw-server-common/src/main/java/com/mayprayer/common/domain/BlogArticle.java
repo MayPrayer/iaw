@@ -3,7 +3,10 @@ package com.mayprayer.common.domain;
 
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -15,6 +18,9 @@ import javax.validation.constraints.Size;
 * @TableName blog_article
 */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class BlogArticle extends BaseDomain {
 
     /**
@@ -46,12 +52,7 @@ public class BlogArticle extends BaseDomain {
     */
     @ApiModelProperty("排序")
     private Integer sort;
-    /**
-    * 标签id
-    */
-    @NotNull(message="[标签id]不能为空")
-    @ApiModelProperty("标签id")
-    private Long tagId;
+
     /**
     * 分类id
     */
@@ -65,6 +66,7 @@ public class BlogArticle extends BaseDomain {
     @ApiModelProperty("是否置顶")
     private Integer isTop;
 
-
-
+    @NotNull(message="[阅读量]不能空")
+    @ApiModelProperty("阅读量")
+    private Long viewNum;
 }

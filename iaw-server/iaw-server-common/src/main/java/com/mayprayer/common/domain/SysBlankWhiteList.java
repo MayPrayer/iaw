@@ -1,7 +1,10 @@
 package com.mayprayer.common.domain;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Size;
@@ -11,6 +14,9 @@ import javax.validation.constraints.Size;
 * @TableName sys_blank_white_list
 */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SysBlankWhiteList extends  BaseDomain {
 
     /**

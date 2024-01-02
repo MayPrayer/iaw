@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.ArticleMapper">
+    <sql id="allColumn">
+        select id, create_time, create_by, update_time, update_by, is_delete, titile, main_img, description, sort, category_id, is_top, view_num
+        from blog_article
+    </sql>
+
+    <resultMap type="BlogArticle" id="BlogArticleResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="titile" column="titile" />
+        <result property="mainImg" column="main_img" />
+        <result property="description" column="description" />
+        <result property="sort" column="sort" />
+        <result property="categoryId" column="category_id" />
+        <result property="isTop" column="is_top" />
+        <result property="viewNum" column="view_num" />
+    </resultMap>
+
+
+
+    <select id="getArticleList" resultType="BlogArticle" parameterType="BlogArticle">
+       <include refid="allColumn"/>
+       <where>
+           <trim suffixOverrides="and">
+               <if test="id!=null">
+                id = #{id}  and
+               </if>
+               <if test="createTime!=null">
+                     date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+               </if>
+               <if test="titile!=null and titile !=''">
+                   titile like  concat('%',#{titile},'%')   and
+               </if>
+               <if test="categoryId!=null ">
+                   category_id = #{categoryId}  and
+               </if>
+               <if test="isTop!=null ">
+                   id_top = #{isTop}  and
+               </if>
+           </trim>
+       </where>
+        order by sort ,create_time desc
+    </select>
+</mapper>
