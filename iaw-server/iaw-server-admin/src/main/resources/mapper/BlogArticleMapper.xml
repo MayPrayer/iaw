@@ -7,89 +7,6 @@
         select id, create_time, create_by, update_time, update_by, is_delete, titile, main_img, description, sort, category_id, is_top, view_num
         from blog_article
     </sql>
-    <insert id="insertArticle" keyProperty="id" useGeneratedKeys="true">
-    insert into  blog_article
-    <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
-        <if test="createTime!=null">
-            create_time,
-        </if>
-        <if test="createBy!=null and createBy!=''">
-            create_by,
-        </if>
-        <if test="updateTime!=null">
-            update_time,
-        </if>
-        <if test="updateBy!=null and updateBy!=''">
-            update_by,
-        </if>
-        <if test="isDelete!=null">
-            is_delete,
-        </if>
-        <if test="titile!=null and titile !=''">
-            titile,
-        </if>
-        <if test="mainImg!=null and mainImg!=''">
-            main_img,
-        </if>
-        <if test="description!=null and description!=''">
-            description,
-        </if>
-        <if test="sort!=null">
-            sort,
-        </if>
-        <if test="categoryId!=null">
-            category_id,
-        </if>
-        <if test="isTop!=null">
-            is_top,
-        </if>
-        <if test="viewNum!=null">
-            view_num,
-        </if>
-    </trim>
-    value
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-        <if test="createTime!=null">
-            #{createTime},
-        </if>
-        <if test="createBy!=null and createBy!=''">
-            #{createBy},
-        </if>
-        <if test="updateTime!=null">
-            #{updateTime},
-        </if>
-        <if test="updateBy!=null and updateBy!=''">
-            #{updateBy},
-        </if>
-        <if test="isDelete!=null">
-            #{isDelete},
-        </if>
-        <if test="titile!=null and titile !=''">
-            #{titile},
-        </if>
-        <if test="mainImg!=null and mainImg!=''">
-            #{mainImg},
-        </if>
-        <if test="description!=null and description!=''">
-            #{description},
-        </if>
-        <if test="sort!=null ">
-            #{sort},
-        </if>
-        <if test="categoryId!=null">
-            #{categoryId},
-        </if>
-        <if test="isTop!=null">
-            #{isTop},
-        </if>
-        <if test="viewNum!=null">
-            #{viewNum},
-        </if>
-    </trim>
-
-
-
-    </insert>
 
     <resultMap type="BlogArticle" id="BlogArticleResult">
         <result property="id" column="id" />
@@ -108,10 +25,95 @@
     </resultMap>
 
 
+    <insert id="insertArticle" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_article
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="titile!=null and titile !=''">
+                titile,
+            </if>
+            <if test="mainImg!=null and mainImg!=''">
+                main_img,
+            </if>
+            <if test="description!=null and description!=''">
+                description,
+            </if>
+            <if test="sort!=null">
+                sort,
+            </if>
+            <if test="categoryId!=null">
+                category_id,
+            </if>
+            <if test="isTop!=null">
+                is_top,
+            </if>
+            <if test="viewNum!=null">
+                view_num,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="titile!=null and titile !=''">
+                #{titile},
+            </if>
+            <if test="mainImg!=null and mainImg!=''">
+                #{mainImg},
+            </if>
+            <if test="description!=null and description!=''">
+                #{description},
+            </if>
+            <if test="sort!=null ">
+                #{sort},
+            </if>
+            <if test="categoryId!=null">
+                #{categoryId},
+            </if>
+            <if test="isTop!=null">
+                #{isTop},
+            </if>
+            <if test="viewNum!=null">
+                #{viewNum},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
 
     <select id="getArticleList" resultType="BlogArticle" parameterType="BlogArticle">
        <include refid="allColumn"/>
        <where>
+           is_delete = 0 and
            <trim suffixOverrides="and">
                <if test="id!=null">
                 id = #{id}  and

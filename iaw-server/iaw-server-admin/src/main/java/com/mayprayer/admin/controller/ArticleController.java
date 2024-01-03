@@ -71,7 +71,7 @@ public class ArticleController {
      * @param ids
      * @return
      */
-    @DeleteMapping("")
+    @DeleteMapping()
     public R delArticle(@RequestParam String ids){
         List<Long> idList= Arrays.asList(ids).stream().map(e->Long.parseLong(e)).collect(Collectors.toList());
         return blogArticleService.delArticle(idList);
@@ -82,7 +82,7 @@ public class ArticleController {
      * @param articleVo
      * @return
      */
-    @PutMapping("")
+    @PutMapping()
     public R updateArticle(@RequestBody(required = false) ArticleVo articleVo){
         BlogArticleDto blogArticleDto =BlogArticleDto.builder().build();
         BeanUtil.copyProperties(articleVo,blogArticleDto);

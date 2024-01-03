@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogArticleCommentsMapper">
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, article_id, parent_id, is_show, content, device_info, ip_address, is_anonymous, nick_name, avatar
+        FROM blog_article_comments
+    </sql>
+
+    <resultMap type="BlogArticleComments" id="BlogArticleCommentsResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="articleId" column="article_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="isShow" column="is_show" />
+        <result property="content" column="content" />
+        <result property="deviceInfo" column="device_info" />
+        <result property="ipAddress" column="ip_address" />
+        <result property="isAnonymous" column="is_anonymous" />
+        <result property="avatar" column="avatar" />
+        <result property="nickName" column="nick_name" />
+    </resultMap>
+
+
+    <insert id="insertArticleComment" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_article
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="articleId!=null ">
+                article_id,
+            </if>
+            <if test="parentId!=null">
+                parent_id,
+            </if>
+            <if test="isShow!=null">
+                is_show,
+            </if>
+            <if test="content!=null">
+                content,
+            </if>
+            <if test="deviceInfo!=null and deviceInfo !=''">
+                device_info,
+            </if>
+            <if test="ipAddress!=null and ipAddress !=''">
+                ip_address,
+            </if>
+            <if test="isAnonymous!=null">
+                is_anonymous,
+            </if>
+            <if test="avatar!=null">
+                avatar,
+            </if>
+            <if test="nickName!=null">
+                nick_name,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="articleId!=null ">
+                #{articleId},
+            </if>
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="isShow!=null">
+                #{isShow},
+            </if>
+            <if test="content!=null">
+                #{content},
+            </if>
+            <if test="deviceInfo!=null and deviceInfo !=''">
+                #{deviceInfo},
+            </if>
+            <if test="ipAddress!=null and ipAddress !=''">
+                #{ipAddress},
+            </if>
+            <if test="isAnonymous!=null">
+                #{isAnonymous},
+            </if>
+            <if test="avatar!=null">
+                #{avatar},
+            </if>
+            <if test="nickName!=null">
+                #{nickName},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getArticleCommentsList" resultType="BlogArticleComments" parameterType="BlogArticleComments">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+                <if test="parentId!=null">
+                    parent_id  = #{parentId}  and
+                </if>
+                <if test="isShow!=null ">
+                    is_show = #{categoryId}  and
+                </if>
+                <if test="deviceInfo!=null and deviceInfo!='' ">
+                    device_info = #{deviceInfo}  and
+                </if>
+                <if test="ipAddress!=null and ipAddress!=''">
+                    ip_address = #{ipAddress}  and
+                </if>
+                <if test="isAnonymous!=null ">
+                    is_anonymous = #{isAnonymous}  and
+                </if>
+                <if test="nickName!=null and nickName!=''">
+                    nick_name = #{nickName}  and
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelArticleComments" parameterType="list">
+        update  blog_article_comments set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateArticleComment" parameterType="BlogArticleComments">
+        update    blog_article
+        <set>
+            <if test="parentId!=null">
+                parent_id = #{parentId},
+            </if>
+            <if test="isShow!=null">
+                is_show = #{isShow},
+            </if>
+            <if test="content !=null and content!=''">
+                content = #{content},
+            </if>
+            <if test="deviceInfo!=null and deviceInfo!=''">
+                device_info = #{deviceInfo},
+            </if>
+            <if test="ipAddress!=null and  ipAddress!=''">
+                ip_address = #{ipAddress},
+            </if>
+            <if test="isAnonymous !=null">
+                is_anonymous = #{isAnonymous},
+            </if>
+            <if test="avatar !=null and avatar !=''">
+                avatar = #{avatar},
+            </if>
+            <if test="nickName !=null and nickName !=''">
+                nick_name = #{nickName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+
+</mapper>

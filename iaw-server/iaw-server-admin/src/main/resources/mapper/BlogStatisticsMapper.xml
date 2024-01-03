@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogStatisticsMapper">
+
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, view_day_num, article_day_num, comments_day_num FROM blog_statistics;
+    </sql>
+
+    <resultMap type="BlogStatistics" id="BlogStatisticsResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="viewDayNum" column="view_day_num" />
+        <result property="articleDayNum" column="article_day_num" />
+        <result property="commentsDayNum" column="comments_day_num" />
+    </resultMap>
+
+
+    <insert id="insertStatistics" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_statistics
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="viewDayNum!=null  ">
+                view_day_num,
+            </if>
+            <if test="articleDayNum!=null ">
+                article_day_num,
+            </if>
+            <if test="commentsDayNum!=null  ">
+                comments_day_num,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="viewDayNum!=null  ">
+                #{viewDayNum},
+            </if>
+            <if test="articleDayNum!=null ">
+                #{articleDayNum},
+            </if>
+            <if test="commentsDayNum!=null  ">
+                #{commentsDayNum},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getStatisticsList" resultType="BlogStatistics" parameterType="BlogStatistics">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelStatistics" parameterType="list">
+        update  blog_statistics set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateStatistics" parameterType="BlogStatistics">
+        update    blog_statistics
+        <set>
+            <if test="viewDayNum!=null">
+                view_day_num  = #{viewDayNum},
+            </if>
+            <if test="articleDayNum!=null">
+                article_day_num  = #{articleDayNum},
+            </if>
+            <if test="commentsDayNum!=null">
+                comments_day_num  = #{commentsDayNum},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogArticleContentMapper">
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, content, article_id
+        FROM blog_article_content
+    </sql>
+
+    <resultMap type="BlogArticleContent" id="BlogArticleContentResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="articleId" column="article_id" />
+        <result property="content" column="content" />
+    </resultMap>
+
+
+    <insert id="insertArticleContent" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_article_content
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="articleId!=null ">
+                article_id,
+            </if>
+            <if test="content!=null and content!=''">
+                content,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="articleId!=null ">
+                #{articleId},
+            </if>
+            <if test="content!=null and content!=''">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getArticleContentList" resultType="BlogArticleContent" parameterType="BlogArticleContent">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+                <if test="articleId!=null">
+                    article_id  = #{articleId}  and
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelArticleContent" parameterType="list">
+        update  blog_article_comments set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateArticleContent" parameterType="BlogArticleContent">
+        update    blog_article
+        <set>
+            <if test="articleId!=null">
+                article_id = #{articleId},
+            </if>
+            <if test="content!=null and content !=''">
+                content = #{content},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

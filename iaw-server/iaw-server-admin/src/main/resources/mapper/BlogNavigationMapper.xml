@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogNavigationMapper">
+
+
+
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, navigation_name, parent_id, ico_img, open_type FROM blog_navigation;
+    </sql>
+
+    <resultMap type="BlogNavigation" id="BlogNavigationResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="navigationName" column="navigation_name" />
+        <result property="parentId" column="parent_id" />
+        <result property="icoImg" column="ico_img" />
+        <result property="openType" column="open_type" />
+    </resultMap>
+
+
+    <insert id="insertNavigation" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_navigation
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="navigationName!=null and navigationName!='' ">
+                navigation_name,
+            </if>
+            <if test="parentId!=null ">
+                parent_id,
+            </if>
+            <if test="icoImg!=null and icoImg!='' ">
+                ico_img,
+            </if>
+            <if test="openType!=null ">
+                open_type,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="navigationName!=null and navigationName!='' ">
+                #{navigationName},
+            </if>
+            <if test="parentId!=null ">
+                #{parentId},
+            </if>
+            <if test="icoImg!=null and icoImg!='' ">
+                #{icoImg},
+            </if>
+            <if test="openType!=null ">
+                #{openType},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getNavigationList" resultType="BlogNavigation" parameterType="BlogNavigation">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+                <if test="navigationName!=null and navigationName!=''">
+                    navigation_name  = #{navigationName}  and
+                </if>
+                <if test="parentId!=null">
+                    parent_id  = #{parentId}  and
+                </if>
+                <if test="openType!=null">
+                    open_type  = #{openType}  and
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelNavigation" parameterType="list">
+        update  blog_navigation set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateNavigation" parameterType="BlogNavigation">
+        update    blog_navigation
+        <set>
+            <if test="navigationName!=null and navigationName!=''">
+                navigation_name  = #{navigationName},
+            </if>
+            <if test="parentId!=null">
+                parent_id  = #{parentId},
+            </if>
+            <if test="openType!=null">
+                open_type  = #{openType},
+            </if>
+            <if test="icoImg!=null">
+                ico_img  = #{icoImg},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+
+
+</mapper>

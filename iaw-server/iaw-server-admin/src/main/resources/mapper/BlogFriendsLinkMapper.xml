@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogFriendsLinkMapper">
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, link_name, link_url, is_open, open_type, sort FROM blog_friends_link;
+    </sql>
+
+    <resultMap type="BlogFriendsLink" id="BlogFriendsLinkResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="linkName" column="link_name" />
+        <result property="linkUrl" column="link_url" />
+        <result property="sort" column="sort" />
+        <result property="isOpen" column="is_open" />
+        <result property="openType" column="open_type" />
+    </resultMap>
+
+
+    <insert id="insertFriendsLink" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_friends_link
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="linkName!=null and linkName!='' ">
+                link_name,
+            </if>
+            <if test="linkUrl!=null  and linkUrl !=''">
+                link_url,
+            </if>
+            <if test="sort!=null  ">
+                sort,
+            </if>
+            <if test="isOpen!=null ">
+                is_open,
+            </if>
+            <if test="openType!=null  ">
+                open_type,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="linkName!=null and linkName!='' ">
+                #{linkName},
+            </if>
+            <if test="linkUrl!=null  and linkUrl !=''">
+                #{linkUrl},
+            </if>
+            <if test="sort!=null  ">
+                #{sort},
+            </if>
+            <if test="isOpen!=null ">
+                #{isOpen},
+            </if>
+            <if test="openType!=null  ">
+                #{openType},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getFriendsLinkList" resultType="BlogFriendsLink" parameterType="BlogFriendsLink">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+                <if test="linkName!=null and linkName!=''">
+                    link_name  = #{linkName}  and
+                </if>
+                <if test="sort!=null">
+                    sort  = #{sort}  and
+                </if>
+                <if test="isOpen!=null">
+                    is_open  = #{isOpen}  and
+                </if>
+                <if test="openType!=null">
+                    open_type  = #{openType}  and
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelFriendsLink" parameterType="list">
+        update  blog_friends_link set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateFriendsLink" parameterType="BlogFriendsLink">
+        update    blog_friends_link
+        <set>
+            <if test="linkName!=null and linkName!=''">
+                link_name  = #{linkName},
+            </if>
+            <if test="sort!=null">
+                sort  = #{sort},
+            </if>
+            <if test="isOpen!=null">
+                is_open  = #{isOpen},
+            </if>
+            <if test="openType!=null">
+                open_type  = #{openType},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+
+
+
+</mapper>

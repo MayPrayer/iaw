@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogTagMapper">
+
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, tag_name, sort FROM blog_tag;
+    </sql>
+
+    <resultMap type="BlogTag" id="BlogTagResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="tagName" column="tag_name" />
+        <result property="sort" column="sort" />
+    </resultMap>
+
+
+    <insert id="insertTag" keyProperty="id" useGeneratedKeys="true">
+        insert into  blog_tag
+        <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                create_by,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                update_by,
+            </if>
+            <if test="isDelete!=null">
+                is_delete,
+            </if>
+            <if test="tagName!=null  and tagName !='' ">
+                tag_name,
+            </if>
+            <if test="sort!=null ">
+                sort,
+            </if>
+        </trim>
+        value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createBy!=null and createBy!=''">
+                #{createBy},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateBy!=null and updateBy!=''">
+                #{updateBy},
+            </if>
+            <if test="isDelete!=null">
+                #{isDelete},
+            </if>
+            <if test="tagName!=null  and tagName !='' ">
+                #{tagName},
+            </if>
+            <if test="sort!=null ">
+                #{sort},
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+    <select id="getTagList" resultType="BlogTag" parameterType="BlogTag">
+        <include refid="allColumn"/>
+        <where>
+            is_delete = 0 and
+            <trim suffixOverrides="and">
+                <if test="id!=null">
+                    id = #{id}  and
+                </if>
+                <if test="createTime!=null">
+                    date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+                </if>
+                <if test="tagName!=null and tagName !=''">
+                    tag_name = #{tagName},
+                </if>
+                <if test="sort!=null">
+                    sort = #{sort},
+                </if>
+            </trim>
+        </where>
+        order by create_time desc
+    </select>
+
+
+
+    <update id="batchDelTag" parameterType="list">
+        update  blog_tag set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateTag" parameterType="BlogTag">
+        update    blog_tag
+        <set>
+            <if test="tagName!=null and tagName !=''">
+                tag_name  = #{tagName},
+            </if>
+            <if test="sort!=null">
+                sort  = #{sort},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>
