@@ -13,4 +13,9 @@ public class Constant {
 
 
    public static final Integer INT_NO = 0 ;
+
+   /**
+    * 用户token key 名称
+    */
+   public  static final String  USER_TOKEN = "token";
 }
