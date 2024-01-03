@@ -4,11 +4,10 @@ import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.mayprayer.common.domain.bo.baidu.chat.BaiduChatMessage;
+import com.mayprayer.common.domain.dto.chat.BaiduChatMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,9 +42,9 @@ public class BaiduChatApi extends ChatApi{
 
     @Override
    public  String reply(String words) {
-        BaiduChatMessage baiduChatMessage  = BaiduChatMessage.builder().content(words).role("user").build();
-        List<BaiduChatMessage> messages  = new ArrayList<>();
-        messages.add(baiduChatMessage);
+        BaiduChatMessageDto baiduChatMessageDto = BaiduChatMessageDto.builder().content(words).role("user").build();
+        List<BaiduChatMessageDto> messages  = new ArrayList<>();
+        messages.add(baiduChatMessageDto);
         Map paramMap = new HashMap();
         paramMap.put("messages",messages);
         String post = HttpUtil.post(String.format(BAIDU_BOT_API,getAccessToken()), JSONUtil.toJsonStr(paramMap));

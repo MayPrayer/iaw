@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.admin.mapper.BlogArticleMapper">
+    <sql id="allColumn">
+        select id, create_time, create_by, update_time, update_by, is_delete, titile, main_img, description, sort, category_id, is_top, view_num
+        from blog_article
+    </sql>
+    <insert id="insertArticle" keyProperty="id" useGeneratedKeys="true">
+    insert into  blog_article
+    <trim prefix="(" suffixOverrides=")" prefixOverrides=",">
+        <if test="createTime!=null">
+            create_time,
+        </if>
+        <if test="createBy!=null and createBy!=''">
+            create_by,
+        </if>
+        <if test="updateTime!=null">
+            update_time,
+        </if>
+        <if test="updateBy!=null and updateBy!=''">
+            update_by,
+        </if>
+        <if test="isDelete!=null">
+            is_delete,
+        </if>
+        <if test="titile!=null and titile !=''">
+            titile,
+        </if>
+        <if test="mainImg!=null and mainImg!=''">
+            main_img,
+        </if>
+        <if test="description!=null and description!=''">
+            description,
+        </if>
+        <if test="sort!=null">
+            sort,
+        </if>
+        <if test="categoryId!=null">
+            category_id,
+        </if>
+        <if test="isTop!=null">
+            is_top,
+        </if>
+        <if test="viewNum!=null">
+            view_num,
+        </if>
+    </trim>
+    value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="createTime!=null">
+            #{createTime},
+        </if>
+        <if test="createBy!=null and createBy!=''">
+            #{createBy},
+        </if>
+        <if test="updateTime!=null">
+            #{updateTime},
+        </if>
+        <if test="updateBy!=null and updateBy!=''">
+            #{updateBy},
+        </if>
+        <if test="isDelete!=null">
+            #{isDelete},
+        </if>
+        <if test="titile!=null and titile !=''">
+            #{titile},
+        </if>
+        <if test="mainImg!=null and mainImg!=''">
+            #{mainImg},
+        </if>
+        <if test="description!=null and description!=''">
+            #{description},
+        </if>
+        <if test="sort!=null ">
+            #{sort},
+        </if>
+        <if test="categoryId!=null">
+            #{categoryId},
+        </if>
+        <if test="isTop!=null">
+            #{isTop},
+        </if>
+        <if test="viewNum!=null">
+            #{viewNum},
+        </if>
+    </trim>
+
+
+
+    </insert>
+
+    <resultMap type="BlogArticle" id="BlogArticleResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="titile" column="titile" />
+        <result property="mainImg" column="main_img" />
+        <result property="description" column="description" />
+        <result property="sort" column="sort" />
+        <result property="categoryId" column="category_id" />
+        <result property="isTop" column="is_top" />
+        <result property="viewNum" column="view_num" />
+    </resultMap>
+
+
+
+    <select id="getArticleList" resultType="BlogArticle" parameterType="BlogArticle">
+       <include refid="allColumn"/>
+       <where>
+           <trim suffixOverrides="and">
+               <if test="id!=null">
+                id = #{id}  and
+               </if>
+               <if test="createTime!=null">
+                     date_format(create_time,'%y%m%d')=date_format(#{createTime},'%y%m%d') and
+               </if>
+               <if test="titile!=null and titile !=''">
+                   titile like  concat('%',#{titile},'%')   and
+               </if>
+               <if test="categoryId!=null ">
+                   category_id = #{categoryId}  and
+               </if>
+               <if test="isTop!=null ">
+                   id_top = #{isTop}  and
+               </if>
+           </trim>
+       </where>
+        order by sort ,create_time desc
+    </select>
+
+
+
+    <update id="batchDelArticle" parameterType="list">
+        update  blog_article set is_delete = 1 where id in
+        <foreach collection="idList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateArticle" parameterType="BlogArticle">
+    update    blog_article
+    <set>
+        <if test="titile!=null and titile !=''">
+            titile = #{titile},
+        </if>
+        <if test="mainImg!=null and main_img!=''">
+            main_img = #{mainImg},
+        </if>
+        <if test="description !=null and description!=''">
+            description = #{description},
+        </if>
+        <if test="sort!=null">
+            sort = #{sort},
+        </if>
+        <if test="categoryId!=null  ">
+            category_id = #{categoryId},
+        </if>
+        <if test="isTop !=null">
+            is_top = #{isTop},
+        </if>
+        <if test="viewNum !=null">
+            view_num = #{viewNum},
+        </if>
+    </set>
+        where id = #{id}
+    </update>
+
+
+
+
+
+
+</mapper>

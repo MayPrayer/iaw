@@ -1,4 +1,4 @@
-package com.mayprayer.common.domain.bo.baidu.chat;
+package com.mayprayer.common.domain.dto.chat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaiduChatMessage {
+public class BaiduChatMessageDto {
 
     private String  role ;  //可以为 assistant 或者user
     private String content;    //提问
