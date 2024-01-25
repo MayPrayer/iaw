@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 public class LoginUserManager implements UserDetailsService {
 
     @Autowired
-    private SysUserMapper userMapper;
+    private SysUserMapper sysUserMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (StrUtil.isBlank(username)){
             throw  new IllegalArgumentException("用户名不能为空");
         }
-        SysUser user = userMapper.loadUserByUserCode(username);
+        SysUser user = sysUserMapper.loadUserByUsername(username);
         if (null==user){
             throw new UsernameNotFoundException("用户名或密码错误");
         }

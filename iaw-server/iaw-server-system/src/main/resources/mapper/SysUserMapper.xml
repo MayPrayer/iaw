@@ -31,7 +31,7 @@
         <result property="wechat" column="wechat" />
     </resultMap>
 
-    <select id="loadUserByUserCode" resultMap="SysUserResult">
+    <select id="loadUserByUsername" resultMap="SysUserResult" parameterType="SysUser">
         SELECT <include refid="allColumn"/>  from  sys_user   where user_name = #{userName};
     </select>
 

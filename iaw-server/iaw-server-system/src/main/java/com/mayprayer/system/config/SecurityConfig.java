@@ -44,7 +44,6 @@ public class SecurityConfig {
             "/v3/api-docs",
             "/api-docs",
             "/swagger-ui/**",
-            "/**/**"
     };
 
 
@@ -75,14 +74,14 @@ public class SecurityConfig {
 
         return http
                 .csrf().disable()
-                .formLogin().loginProcessingUrl("/mallApi/login")
+                .formLogin().loginProcessingUrl("/login")
                 .failureHandler(myAuthenticationHandler)
                 .successHandler(myAuthenticationHandler)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(myAuthenticationHandler)
                 .accessDeniedHandler(myAuthenticationHandler)
                 .and()
-                .logout().logoutUrl("/mallApi/loginout")
+                .logout().logoutUrl("/loginout")
                 .logoutSuccessHandler(myAuthenticationHandler)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
