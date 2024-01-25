@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.system.mapper.SysUserMapper">
+
+
+    <sql id="allColumn">
+               id, create_time, create_by, update_time, update_by, is_delete,
+               user_name, password, login_address, login_type, last_login_time,
+               ip, use_agent, phone,email,qq,wechat
+    </sql>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="userName" column="user_name" />
+        <result property="password" column="password" />
+        <result property="loginAddress" column="login_address" />
+        <result property="loginType" column="login_type" />
+        <result property="lastLoginTime" column="last_login_time" />
+        <result property="ip" column="ip" />
+        <result property="useAgent" column="use_agent" />
+        <result property="phone" column="phone" />
+        <result property="email" column="email" />
+        <result property="qq" column="qq" />
+        <result property="wechat" column="wechat" />
+    </resultMap>
+
+    <select id="loadUserByUserCode" resultMap="SysUserResult">
+        SELECT <include refid="allColumn"/>  from  sys_user   where user_name = #{userName};
+    </select>
+
+
+</mapper>
