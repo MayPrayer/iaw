@@ -30,7 +30,7 @@ public class SysUser extends  BaseDomain {
     @Size(max= 50,message="编码长度不能超过50")
     @ApiModelProperty("用户名")
     @Length(max= 50,message="编码长度不能超过50")
-    private String username;
+    private String userName;
     /**
     * 密码
     */
@@ -74,4 +74,35 @@ public class SysUser extends  BaseDomain {
     @ApiModelProperty("用户设备")
     @Length(max= 100,message="编码长度不能超过100")
     private String useAgent;
+
+
+    /**
+     * 手机号
+     */
+    @Size(max= 11,message="编码长度不能超过11")
+    @ApiModelProperty("手机号")
+    @Length(max= 11,message="编码长度不能超过11")
+    private String phone;
+    /**
+     * 邮箱
+     */
+    @Size(max= 50,message="编码长度不能超过50")
+    @ApiModelProperty("邮箱")
+    @Length(max= 50,message="编码长度不能超过50")
+    private String email;
+    /**
+     * qq
+     */
+    @Size(max= 50,message="编码长度不能超过50")
+    @ApiModelProperty("qq")
+    @Length(max= 50,message="编码长度不能超过50")
+    private String qq;
+    /**
+     * 微信
+     */
+    @Size(max= 50,message="编码长度不能超过50")
+    @ApiModelProperty("微信")
+    @Length(max= 50,message="编码长度不能超过50")
+    private String wechat;
+
 }

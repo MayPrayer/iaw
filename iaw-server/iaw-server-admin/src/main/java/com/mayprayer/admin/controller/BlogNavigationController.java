@@ -4,6 +4,7 @@ package com.mayprayer.admin.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mayprayer.admin.service.BlogNavigationService;
+import com.mayprayer.common.domain.BlogCategory;
 import com.mayprayer.common.domain.BlogNavigation;
 import com.mayprayer.common.utils.page.PageResult;
 import com.mayprayer.common.utils.response.R;
@@ -47,6 +48,12 @@ public class BlogNavigationController {
         PageResult result = PageResult.buildPage((Page)navigationList);
         return R.success(result);
     }
+
+
+
+
+
+
 
 
     /**

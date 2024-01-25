@@ -18,4 +18,12 @@ public class Constant {
     * 用户token key 名称
     */
    public  static final String  USER_TOKEN = "token";
+
+   /**
+    * redis 存放用户登录信息 文件夹名称
+    */
+   public static  final  String  LOGIN_USER_FOLDER = "LoginUser:";
+
+
+
 }

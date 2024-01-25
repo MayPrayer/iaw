@@ -1,6 +1,7 @@
 package com.mayprayer.system.filter;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mayprayer.common.domain.dto.sys.LoginUser;
@@ -64,7 +65,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 while (it.hasNext()){
                     String userKeyStr = it.next();
                     Map<String,Object> userMap= (Map) redisTemplate.opsForValue().get(userKeyStr);
-                    LoginUser user = LoginUser.buildLoginUserDTO(userMap);
+                    LoginUser user = BeanUtil.toBean(userMap,LoginUser.class);
                     if (user!=null){
                         //查询到 直接构建一个认证对象
                         UsernamePasswordAuthenticationToken userToken  = new UsernamePasswordAuthenticationToken(user,null,null);
