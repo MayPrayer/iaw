@@ -39,22 +39,29 @@ public class LoginUser  extends SysUser implements UserDetails, Serializable {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+
+        //true  未失效      //  已失效
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        // false 锁定       //true 正常状态
+        return true;
     }
 
-    @Override
+
+
+        @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        //false 凭证过期    //true 没有过期
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        //true 启用      //false 禁用
+        return true;
     }
 
 }

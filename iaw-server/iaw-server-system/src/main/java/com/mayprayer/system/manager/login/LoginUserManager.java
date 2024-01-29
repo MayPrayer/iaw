@@ -36,7 +36,7 @@ public class LoginUserManager implements UserDetailsService {
        LoginUser loginUser = new LoginUser();
         BeanUtil.copyProperties(user,loginUser);
         //暂时没有权限信息
-        return null;
+        return loginUser;
     }
 
 }
