@@ -1,7 +1,8 @@
 package com.mayprayer.system.filter;
 
 
-import com.mayprayer.system.config.Md5PasswordEncoder;
+import cn.hutool.crypto.symmetric.SM4;
+import com.mayprayer.system.config.SM3PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class MyAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
-    private Md5PasswordEncoder md5PasswordEncoder;
+    private SM3PasswordEncoder sm3PasswordEncoder;
 
 
 
@@ -31,14 +32,11 @@ public class MyAuthenticationProvider extends DaoAuthenticationProvider {
         }
 
         String presentedPassword = authentication.getCredentials().toString();
-        if (!md5PasswordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+        if (!sm3PasswordEncoder.matches(presentedPassword, userDetails.getPassword())) {
             this.logger.debug("Failed to authenticate since password does not match stored value");
             throw new BadCredentialsException(this.messages
                     .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "用户名或密码错误"));
         }
-
-
-
     }
 
 

@@ -54,11 +54,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider myAuthenticationProvider(LoginUserManager loginUserManager, Md5PasswordEncoder md5PasswordEncoder){
+    public DaoAuthenticationProvider myAuthenticationProvider(LoginUserManager loginUserManager, SM3PasswordEncoder sm3PasswordEncoder){
         MyAuthenticationProvider myAuthenticationProvider = new MyAuthenticationProvider();
         myAuthenticationProvider.setUserDetailsService(loginUserManager);
         myAuthenticationProvider.setHideUserNotFoundExceptions(false);
-        myAuthenticationProvider.setPasswordEncoder(md5PasswordEncoder);
+        myAuthenticationProvider.setPasswordEncoder(sm3PasswordEncoder);
         return myAuthenticationProvider;
     }
 
