@@ -3,7 +3,7 @@ package com.mayprayer.admin.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mayprayer.admin.service.BlogArticleCommentsService;
-import com.mayprayer.common.domain.BlogArticleComments;
+import com.mayprayer.admin.domain.BlogArticleComments;
 import com.mayprayer.common.utils.page.PageResult;
 import com.mayprayer.common.utils.response.R;
 import lombok.extern.slf4j.Slf4j;

@@ -2,12 +2,11 @@ package com.mayprayer.system.filter;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
-import com.mayprayer.common.domain.dto.sys.LoginUser;
 import com.mayprayer.common.utils.constant.Constant;
 import com.mayprayer.common.utils.constant.ResponseConstant;
 import com.mayprayer.common.utils.enums.ResultCode;
 import com.mayprayer.common.utils.response.R;
-import com.mayprayer.system.util.ResponseUtil;
+import com.mayprayer.system.domain.dto.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -58,7 +57,7 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
                 .msg(ResultCode.AUTHORIZED.getDesc())
                 .data(null)
                 .build();
-        ResponseUtil.writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.UNAUTHORIZED);
+       writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.UNAUTHORIZED);
     }
 
 
@@ -77,7 +76,7 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
                 .msg(ResultCode.NO_LOGIN.getDesc())
                 .data(null)
                 .build();
-        ResponseUtil.writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.UNAUTHORIZED);
+        writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.UNAUTHORIZED);
     }
 
 
@@ -85,7 +84,7 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         R result =  R.builder().msg(exception.getMessage()).build();
-        ResponseUtil.writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
+        writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
     }
 
 
@@ -97,7 +96,7 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
         redisTemplate.opsForValue().set(Constant.LOGIN_USER_FOLDER+user.getUsername()+"_"+token,user,expireTime,TimeUnit.MINUTES);
         //2.返回登录成功的json数据
         R result = R.success(ResponseConstant.RESPONSE_SUCCESS_MSG,token);
-        ResponseUtil.writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
+       writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
     }
 
 
@@ -116,8 +115,16 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
             redisTemplate.delete(redisTemplate.keys("*_"+token));
         }
         R result = R.success(ResponseConstant.RESPONSE_SUCCESS_MSG);
-        ResponseUtil.writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
+       writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
     }
 
 
+
+
+    void writeJson(String result, HttpServletResponse response, HttpStatus status) throws IOException {
+        response.setCharacterEncoding("utf-8");    //设置 HttpServletResponse使用utf-8编码
+        response.setHeader("Content-Type", "application/json");  //设置响应头的编码
+        response.setStatus(status.value());
+        response.getWriter().write(result);
+    }
 }

@@ -6,7 +6,7 @@ import com.mayprayer.system.filter.LoginFilter;
 import com.mayprayer.system.filter.MyAuthenticationHandler;
 import com.mayprayer.system.filter.MyAuthenticationProvider;
 import com.mayprayer.system.filter.TokenFilter;
-import com.mayprayer.system.manager.login.LoginUserManager;
+import com.mayprayer.system.manager.LoginUserManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -2,7 +2,7 @@ package com.mayprayer.admin.service.impl;
 
 import com.mayprayer.admin.mapper.BlogNavigationMapper;
 import com.mayprayer.admin.service.BlogNavigationService;
-import com.mayprayer.common.domain.BlogNavigation;
+import com.mayprayer.admin.domain.BlogNavigation;
 import com.mayprayer.common.utils.constant.ResponseConstant;
 import com.mayprayer.common.utils.response.R;
 import org.springframework.beans.factory.annotation.Autowired;

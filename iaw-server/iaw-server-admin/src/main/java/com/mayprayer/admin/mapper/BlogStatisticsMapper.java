@@ -1,6 +1,6 @@
 package com.mayprayer.admin.mapper;
 
-import com.mayprayer.common.domain.BlogStatistics;
+import com.mayprayer.admin.domain.BlogStatistics;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

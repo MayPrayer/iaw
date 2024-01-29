@@ -2,7 +2,7 @@ package com.mayprayer.web.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.mayprayer.common.utils.xml.XmlUtil;
-import com.mayprayer.system.context.MessageStrategyContext;
+import com.mayprayer.web.context.MessageStrategyContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -3,10 +3,9 @@ package com.mayprayer.web.controller;
 
 import cn.hutool.core.util.IdUtil;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mayprayer.common.domain.dto.rss.ChannelDto;
-import com.mayprayer.common.domain.dto.rss.ItemDto;
-import com.mayprayer.common.domain.dto.rss.RssDto;
-import com.mayprayer.common.utils.xml.XmlUtil;
+import com.mayprayer.web.domain.rss.ChannelDto;
+import com.mayprayer.web.domain.rss.ItemDto;
+import com.mayprayer.web.domain.rss.RssDto;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

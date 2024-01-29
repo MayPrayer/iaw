@@ -1,7 +1,6 @@
 package com.mayprayer.common.utils.xml;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mayprayer.common.domain.dto.wechat.WxMessgeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -46,11 +45,6 @@ public class XmlUtil {
     }
 
 
-
-    public static String textMessageToXml(WxMessgeDto wxMessgeDto) throws Exception {
-        XmlMapper xmlMapper = new XmlMapper();
-        return  xmlMapper.writeValueAsString(wxMessgeDto);
-    }
 
 
 

@@ -4,7 +4,7 @@ package com.mayprayer.system.filter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mayprayer.common.domain.dto.sys.LoginUser;
+import com.mayprayer.system.domain.dto.LoginUser;
 import com.mayprayer.common.utils.constant.Constant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;

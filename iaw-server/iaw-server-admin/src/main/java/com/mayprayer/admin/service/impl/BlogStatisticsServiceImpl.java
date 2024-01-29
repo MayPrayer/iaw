@@ -2,7 +2,7 @@ package com.mayprayer.admin.service.impl;
 
 import com.mayprayer.admin.mapper.BlogStatisticsMapper;
 import com.mayprayer.admin.service.BlogStatisticsService;
-import com.mayprayer.common.domain.BlogStatistics;
+import com.mayprayer.admin.domain.BlogStatistics;
 import com.mayprayer.common.utils.constant.ResponseConstant;
 import com.mayprayer.common.utils.response.R;
 import org.springframework.beans.factory.annotation.Autowired;

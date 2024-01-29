@@ -2,7 +2,7 @@ package com.mayprayer.admin.service.impl;
 
 import com.mayprayer.admin.mapper.BlogFriendsLinkMapper;
 import com.mayprayer.admin.service.BlogFriendsLinkService;
-import com.mayprayer.common.domain.BlogFriendsLink;
+import com.mayprayer.admin.domain.BlogFriendsLink;
 import com.mayprayer.common.utils.constant.ResponseConstant;
 import com.mayprayer.common.utils.response.R;
 import org.springframework.beans.factory.annotation.Autowired;

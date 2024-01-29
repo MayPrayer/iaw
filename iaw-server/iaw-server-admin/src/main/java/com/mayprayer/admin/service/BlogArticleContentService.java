@@ -1,6 +1,6 @@
 package com.mayprayer.admin.service;
 
-import com.mayprayer.common.domain.BlogArticleContent;
+import com.mayprayer.admin.domain.BlogArticleContent;
 import com.mayprayer.common.utils.response.R;
 
 import java.util.List;

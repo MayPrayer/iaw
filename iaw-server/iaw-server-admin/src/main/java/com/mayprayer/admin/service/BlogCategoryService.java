@@ -1,7 +1,7 @@
 package com.mayprayer.admin.service;
 
 
-import com.mayprayer.common.domain.BlogCategory;
+import com.mayprayer.admin.domain.BlogCategory;
 import com.mayprayer.common.utils.response.R;
 import java.util.List;
 

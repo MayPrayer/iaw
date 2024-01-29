@@ -1,6 +1,6 @@
 package com.mayprayer.admin.mapper;
 
-import com.mayprayer.common.domain.BlogArticleComments;
+import com.mayprayer.admin.domain.BlogArticleComments;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.mayprayer.admin.mapper;
 
 
-import com.mayprayer.common.domain.BlogFriendsLink;
+import com.mayprayer.admin.domain.BlogFriendsLink;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

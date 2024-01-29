@@ -2,7 +2,7 @@ package com.mayprayer.system.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mayprayer.common.domain.dto.sys.LoginDto;
+import com.mayprayer.system.domain.dto.LoginDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
