@@ -24,7 +24,7 @@ spring:
 
 #mybatis
 mybatis:
-  mapperLocations: classpath:mapper/*.xml
+  mapperLocations: classpath*:mapper/*.xml
   configuration: # 配置驼峰命名映射
     map-underscore-to-camel-case: true
   typeAliasesPackage: com.mayprayer.common.domain,;com.mayprayer.common.domain.query,;com.mayprayer.common.domain.bo,;com.mayprayer.common.domain.vo,;com.mayprayer.common.domain.dto,;
