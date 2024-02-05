@@ -35,9 +35,9 @@ public class SysUser extends  BaseDomain {
     * 密码
     */
     @NotBlank(message="[密码]不能为空")
-    @Size(max= 20,message="编码长度不能超过64")
+    @Size(max= 64,message="编码长度不能超过64")
     @ApiModelProperty("密码")
-    @Length(max= 20,message="编码长度不能超过64")
+    @Length(max= 64,message="编码长度不能超过64")
     private String password;
     /**
     * 登录地址

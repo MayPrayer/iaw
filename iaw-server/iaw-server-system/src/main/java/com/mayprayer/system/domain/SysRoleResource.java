@@ -1,5 +1,6 @@
 package com.mayprayer.system.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SysRoleResource extends  BaseDomain {
 
-    private Long placeholder ;
+
+    @ApiModelProperty("角色id")
+    private Long roleId ;
+
+    @ApiModelProperty("资源id")
+    private Long resourceId ;
 
 
 }

@@ -11,7 +11,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: prod
+    active: dev
   #日期格式问题解决
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

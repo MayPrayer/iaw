@@ -14,8 +14,53 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SysResource extends  BaseDomain {
+        /**
+         * 资源类型
+         */
+        private Integer  resourceType;
 
-    private Long placeholder ;
+        /**
+         * 资源名称
+         */
+        private  String resourceName;
 
+        /**
+         * 权限代码
+         */
+        private  String resourceCode;
+
+
+        /**
+         * 父级id
+         */
+        private  Long parentId;
+
+
+        /**
+         * 排序
+         */
+        private  Integer sort;
+
+
+        /**
+         * 容器路径
+         */
+        private  String component;
+
+        /**
+         * 容器名称
+         */
+        private  String componentName;
+
+        /**
+         * 是否可见
+         */
+        private  Integer visible;
+
+
+        /**
+         * 图标
+         */
+        private  String icon;
 
 }
