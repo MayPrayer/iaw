@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.system.mapper.SysLogMapper">
+
+    <sql id="allColumn">
+        id, create_time, create_by, update_time, update_by, is_delete, operate_type, operate_time, method_name, request_params, response_params,
+        log_type, user_id, user_name, ip
+    </sql>
+
+    <resultMap type="SysLog" id="SysLogResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="operateType" column="operate_type" />
+        <result property="operateTime" column="operate_time" />
+        <result property="methodName" column="method_name" />
+        <result property="requestParams" column="request_params" />
+        <result property="responseParams" column="response_params" />
+        <result property="logType" column="log_type" />
+        <result property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="ip" column="ip" />
+    </resultMap>
+
+
+
+</mapper>
