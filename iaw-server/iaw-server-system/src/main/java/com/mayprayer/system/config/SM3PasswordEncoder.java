@@ -1,6 +1,5 @@
 package com.mayprayer.system.config;
 
-import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.digest.SM3;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
