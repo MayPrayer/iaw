@@ -83,7 +83,7 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        R result =  R.builder().msg(exception.getMessage()).build();
+        R result =  R.builder().code(ResultCode.FAIL.getCode()).msg(exception.getMessage()).build();
         writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
     }
 
@@ -93,9 +93,14 @@ public class MyAuthenticationHandler implements AccessDeniedHandler, Authenticat
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String token = IdUtil.fastUUID();
         LoginUser user = (LoginUser)authentication.getPrincipal();
-        redisTemplate.opsForValue().set(Constant.LOGIN_USER_FOLDER+user.getUsername()+"_"+token,user,expireTime,TimeUnit.MINUTES);
-        //2.返回登录成功的json数据
         R result = R.success(ResponseConstant.RESPONSE_SUCCESS_MSG,token);
+        try {
+        redisTemplate.opsForValue().set(Constant.LOGIN_USER_FOLDER+user.getUsername()+"_"+token,user,expireTime,TimeUnit.MINUTES);
+        }catch (Exception e){
+            result  = R.fail("redis连接失败");
+        }
+        //2.返回登录成功的json数据
+
        writeJson(JSONUtil.toJsonStr(result),response, HttpStatus.OK);
     }
 

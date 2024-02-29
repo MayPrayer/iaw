@@ -14,7 +14,7 @@ export default defineConfig({
     //配置代理
     proxy:{
       '/api':{
-        target:'http://localhost:8888/blog',
+        target:'http://localhost:8071/',
         changeOrigin:true,
         rewrite:(path)=>path.replace(/^\/api/, "")
       }

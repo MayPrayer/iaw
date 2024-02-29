@@ -1,6 +1,7 @@
 package com.mayprayer.system.filter;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mayprayer.system.domain.dto.LoginDto;
 import lombok.extern.slf4j.Slf4j;
@@ -68,11 +69,24 @@ public class LoginFilter  extends UsernamePasswordAuthenticationFilter {
     Authentication authenticationLogin(LoginDto loginBO,HttpServletRequest request){
         loginBO.setUserName(loginBO.getUserName().trim());
         loginBO.setPassword(loginBO.getPassword().trim());
+        check(loginBO);
         UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginBO.getUserName(), loginBO.getPassword());
         setDetails(request, authRequest);
         Authentication authenticate=  this.getAuthenticationManager().authenticate(authRequest);
         return  authenticate;
     }
+
+
+    public void check(LoginDto loginBO){
+        if (StrUtil.isBlank(loginBO.getUserName())){
+            throw  new BadCredentialsException("用户名不能为空");
+        }
+        if (StrUtil.isBlank(loginBO.getPassword())){
+            throw  new BadCredentialsException("密码不能为空");
+        }
+    }
+
+
 
 
 
