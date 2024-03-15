@@ -35,11 +35,15 @@
 <script setup>
 import  {login} from "../api/admin/login"
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+
+let router = useRouter();
 
 const loginForm = ref(null);
 const loginBO = ref({
-  userName:'',
-  password:''
+  userName:'admin',
+  password:'123456'
 })
 
 
@@ -57,14 +61,17 @@ const rules = {
      * 提交
      */
 const  submit = ()=>{
-
+    let self = this
     loginForm.value.validate((valid)=>{
     if (valid){
       login(loginBO.value).then(
           response=> {
-            console.log(response)
+            if(response.data.code ==2000){
+              router.push({path:"/home"})
+            }
           }
       )
+      return  true
     }else{
       return false
     }
@@ -78,7 +85,7 @@ const  submit = ()=>{
 <style scoped>
   .content{
     position: relative;
-    background-image: url("https://project-1258741617.cos.ap-shanghai.myqcloud.com/BLUE.jpg");
+    background-image: url("../../public/BLUE.jpg");
     height: 1080px;
     opacity: 0.7;
     background-repeat: no-repeat; /* 设置背景不重复 */

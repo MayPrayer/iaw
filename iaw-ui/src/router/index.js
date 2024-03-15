@@ -11,7 +11,14 @@ const routes = [
     {
         path: '/login',
         component: ()=>import('../views/login.vue'),
+    },
+
+    {
+        path: '/home',
+        component:()=>import('../views/home.vue')
     }
+
+
 ];
 
 // 创建路由实例（`router`）并传递路由映射配置（`route`）
