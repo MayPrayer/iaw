@@ -1,6 +1,7 @@
 package com.mayprayer.web.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.mayprayer.common.utils.annotations.Anonymous;
 import com.mayprayer.common.utils.xml.XmlUtil;
 import com.mayprayer.web.context.MessageStrategyContext;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ public class WxOfficialAccountController {
     /**
      * get方式主要为验签
      */
+    @Anonymous
     @GetMapping("/dispatch")
     public void dispatch(@RequestParam("signature") String signature ,@RequestParam("timestamp") String timestamp,@RequestParam("nonce") String nonce,@RequestParam("echostr") String echostr){
         String token  =wxToken;
@@ -66,6 +68,7 @@ public class WxOfficialAccountController {
     /**
      * 消息监听与回复
      */
+    @Anonymous
     @PostMapping( value = "/dispatch",consumes = MediaType.TEXT_XML_VALUE,produces = MediaType.APPLICATION_XML_VALUE)
     public Object  watch() throws  Exception{
         Map<String, String> messageMap = XmlUtil.parseXml(request.getInputStream());
