@@ -47,7 +47,13 @@ public class BaiduChatApi extends ChatApi{
         messages.add(baiduChatMessageDto);
         Map paramMap = new HashMap();
         paramMap.put("messages",messages);
-        String post = HttpUtil.post(String.format(BAIDU_BOT_API,getAccessToken()), JSONUtil.toJsonStr(paramMap));
+        String post = null ;
+        try{
+            post= HttpUtil.post(String.format(BAIDU_BOT_API,getAccessToken()), JSONUtil.toJsonStr(paramMap));
+        }catch (Exception e){
+            log.error("出现异常，原因为:"+e.getMessage());
+        }
+
         Map result = JSONUtil.toBean(post, Map.class);
         String resp = (String)result.get("result");
         if (StrUtil.isNotBlank(resp)){

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/wechat/bot")
@@ -76,6 +77,70 @@ public class WechatBotController {
         log.info("发送消息结果为："+post);
 
         }
+
+
+
+
+
+
+        @Anonymous
+        @PostMapping("/testDirection")
+        public void TestDirection(){
+
+
+//            WxBotMessageDto.builder().content(reply).type("file").build();
+
+
+//        HttpUtil.post(wxSendApi,)
+
+
+
+        }
+
+    {
+
+    }
+
+
+
+
+
+
+    public static void main(String[] args) {
+
+        testUrl("https://api.j4u.ink/proxy/redirect/moyu/calendar/20240322.png");
+    }
+
+    public static void testJson(){
+        String s = HttpUtil.get("http://www.wudada.online/Api/ScSp");
+        System.out.println(s);
+        Map map = JSONUtil.toBean(s, Map.class);
+        WxBotMessageDto wxBotMessageDto = WxBotMessageDto.builder().content((String) map.get("data")).type("fileUrl").build();
+        List<WxBotMessageDto> wxBotMessageDtos = new ArrayList<>();
+        wxBotMessageDtos.add(wxBotMessageDto);
+        send(wxBotMessageDtos);
+    }
+
+
+
+
+
+    public static void testUrl(String url) {
+        WxBotMessageDto wxBotMessageDto = WxBotMessageDto.builder().type("fileUrl").content(url).build();
+        List<WxBotMessageDto> wxBotMessageDtos = new ArrayList<>();
+        wxBotMessageDtos.add(wxBotMessageDto);
+        send(wxBotMessageDtos);
+    }
+
+    public static void send(List<WxBotMessageDto> wxBotMessageDtos){
+        String result = HttpUtil.post("", JSONUtil.toJsonStr(WxBotMessageSendDto.builder()
+                .to("石仔会所")
+                .isRoom(true)
+                .data(wxBotMessageDtos).build()));
+    }
+
+
+
 
 
 
