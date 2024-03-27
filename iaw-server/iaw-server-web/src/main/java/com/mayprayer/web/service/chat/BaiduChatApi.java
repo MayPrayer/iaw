@@ -1,6 +1,7 @@
 package com.mayprayer.web.service.chat;
 
 import cn.hutool.cache.impl.TimedCache;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -36,20 +37,37 @@ public class BaiduChatApi extends ChatApi{
     private String sk;
 
 
+    Map<String,List<BaiduChatMessageDto>> context = new HashMap<>();
+
+
     private  static  final  String BAIDU_ACCESS_TOKEN_API = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s";
 
     private  static  final  String BAIDU_ACCESS_TOKEN_KEY = "token:baidu_access_token:";
 
     @Override
-   public  String reply(String words) {
+   public  String reply(String words,String userId) {
         BaiduChatMessageDto baiduChatMessageDto = BaiduChatMessageDto.builder().content(words).role("user").build();
-        List<BaiduChatMessageDto> messages  = new ArrayList<>();
-        messages.add(baiduChatMessageDto);
+
+        List<BaiduChatMessageDto> messages = context.get(userId);
+        if (CollectionUtil.isEmpty(messages)){
+            messages = new ArrayList<>();
+            messages.add(baiduChatMessageDto);
+        }else{
+            if (!baiduChatMessageDto.getRole().equals(messages.get(messages.size()-1).getRole())){
+                messages.add(baiduChatMessageDto);
+            }
+        }
+        //如果最后一个内容跟当前内容一样则不添加
+
+
+
         Map paramMap = new HashMap();
         paramMap.put("messages",messages);
         String post = null ;
         try{
-            post= HttpUtil.post(String.format(BAIDU_BOT_API,getAccessToken()), JSONUtil.toJsonStr(paramMap));
+            String json = JSONUtil.toJsonStr(paramMap);
+            log.info("上下文参数为："+json);
+            post= HttpUtil.post(String.format(BAIDU_BOT_API,getAccessToken()), json);
         }catch (Exception e){
             log.error("出现异常，原因为:"+e.getMessage());
         }
@@ -57,8 +75,14 @@ public class BaiduChatApi extends ChatApi{
         Map result = JSONUtil.toBean(post, Map.class);
         String resp = (String)result.get("result");
         if (StrUtil.isNotBlank(resp)){
+            if (messages.get(messages.size()-1).getRole().equals("user")){
+                messages.add(BaiduChatMessageDto.builder().role("assistant").content(resp).build());
+                context.put(userId,messages);
+            }
             return  resp;
         }
+
+        log.error("文心一言回复失败：{}",post);
         log.error("文心一言回复失败：{}",resp);
         return "";
     }

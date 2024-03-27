@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class QinYunKeChatApi  extends ChatApi{
 
-    public String reply(String words){
+    public String reply(String words,String userId){
         String result = HttpUtil.get(String.format(QIN_YUN_KE_API, words));
         Map map= JSONUtil.toBean(result, Map.class);
         return  (String) map.get("content");

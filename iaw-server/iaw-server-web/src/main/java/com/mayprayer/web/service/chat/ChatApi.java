@@ -9,9 +9,15 @@ public abstract class ChatApi {
 
       static  final  String QIN_YUN_KE_API = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=%s";
 
-      static  final  String BAIDU_BOT_API = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant?access_token=%s";
+      static  final  String BAIDU_BOT_API = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro?access_token=%s";
 
 
-     public  abstract  String reply(String words);
+    /**
+     *
+     * @param words  words 对话语句
+     * @param userId userId 确认对象 用于后续存储上下文对象
+     * @return
+     */
+     public  abstract  String reply(String words,String userId);
 
 }

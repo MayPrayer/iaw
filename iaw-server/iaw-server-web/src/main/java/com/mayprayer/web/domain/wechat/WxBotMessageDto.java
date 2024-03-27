@@ -24,4 +24,6 @@ public class WxBotMessageDto {
      */
     public String content;
 
+    public Boolean isToMaster = false;
+
 }

@@ -35,7 +35,7 @@ public class TextMessageHandler extends AbstractMessageHandler{
         WxTextMessageDto wxTextMessageDto = (WxTextMessageDto) wxMessgeDto;
         String result = null;
         if (StrUtil.isBlank((String)timedCache.get(wxTextMessageDto.getMsgId()))){
-            result= baiduChatApi.reply(wxTextMessageDto.getContent());
+            result= baiduChatApi.reply(wxTextMessageDto.getContent(),wxTextMessageDto.getFromUserName());
             timedCache.put(wxTextMessageDto.getMsgId(),result);
             return  buildSubscribeMsg(result);
         }

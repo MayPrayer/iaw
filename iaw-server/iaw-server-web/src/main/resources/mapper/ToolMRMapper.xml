@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayprayer.web.mapper.ToolMRMapper">
+
+    <sql id="allColumn">
+        SELECT id, create_time, create_by, update_time, update_by, is_delete, text, level
+        FROM blog_article_content
+    </sql>
+
+
+    <resultMap type="ToolMR" id="ToolMRResult">
+        <result property="id" column="id" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="isDelete" column="is_delete" />
+        <result property="text" column="text" />
+        <result property="level" column="level" />
+    </resultMap>
+
+
+    <insert id="batchInsert" parameterType="ToolMR">
+           insert into tool_m_r(text,level) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.text},#{item.level})
+           </foreach>
+    </insert>
+
+    <select id="getRandomMR" parameterType="String" resultMap="ToolMRResult">
+        SELECT * FROM tool_m_r where 1=1
+        <if test="null !=level and level!=''">
+        and  level = #{level}
+        </if>
+        ORDER BY rand() limit 1
+    </select>
+
+
+</mapper>
