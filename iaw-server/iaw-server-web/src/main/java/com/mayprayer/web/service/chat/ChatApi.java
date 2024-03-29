@@ -9,7 +9,7 @@ public abstract class ChatApi {
 
       static  final  String QIN_YUN_KE_API = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=%s";
 
-      static  final  String BAIDU_BOT_API = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro?access_token=%s";
+      static  final  String BAIDU_BOT_API = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=%s";
 
 
     /**

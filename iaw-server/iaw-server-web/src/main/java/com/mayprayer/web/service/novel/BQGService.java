@@ -1,14 +1,27 @@
 package com.mayprayer.web.service.novel;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.mayprayer.web.domain.tool.NovelInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverLogLevel;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,7 +31,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.net.HttpCookie;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,20 +52,89 @@ public class BQGService {
 
 
     public static void main(String[] args) {
-        run("5531");
+        search("我的26岁女房客");
+
     }
+
+
+
+
+    public static void  search(String name ){
+
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // 启用无头模式
+        options.addArguments("--disable-gpu"); // 禁用GPU加速，可提高稳定性
+        options.addArguments("--remote-allow-origins=*");
+
+        // 指定 Chrome 驱动程序路径
+        System.setProperty("webdriver.chrome.driver", "D:/chromedriver-win64/chromedriver.exe");
+
+
+        // 初始化 Chrome WebDriver，并设置选项
+        WebDriver driver = new ChromeDriver(options);
+
+        // 打开网页
+        driver.get("https://www.bqgbb.cc");
+
+        //输入
+        WebElement searchBox  = driver.findElement(By.className("text"));
+        searchBox.sendKeys(name);
+
+        //点击查询
+        WebElement searchButton = driver.findElement(By.className("btn"));
+        searchButton.click();
+        try{
+            Thread.sleep(5000);
+        }catch (Exception e){
+        }
+
+        String s = driver.getPageSource();
+        Document searchTable = Jsoup.parse(s);
+        Elements bookboxs = searchTable.select(".bookbox");
+        for (Element item : bookboxs){
+            String href = item.select(".bookinfo").select("a").first().attr("href");
+            String bookName = item.select(".bookinfo").select("a").first().text();
+            String author = item.select(".bookinfo").select(".author").first().text();
+            String info = item.select(".bookinfo").select(".uptime").first().text();
+            System.out.println("href:"+href);
+            System.out.println("bookName:"+bookName);
+            System.out.println("author:"+author);
+            System.out.println("info:"+info);
+        }
+
+
+        // 关闭浏览器
+        driver.quit();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public static void run (String id){
         List<String> chapterUrls = new ArrayList<>();
-        Document catoroy = Jsoup.parse(HttpUtil.get("https://www.bqgbb.cc/book/"+id+"/"));
+        Document catoroy = Jsoup.parse(HttpUtil.get("https://www.bq90.cc/book/"+id+"/"));
         Elements charcters = catoroy.select(".listmain dl dd").removeClass(".more pc_none");
         MERGED_FILE =NOVEL_FOLDER+id+".txt";
         log.info("开始下载");
         if (CollectionUtil.isNotEmpty(charcters)) {
             for (Element item : charcters) {
                 String charcterUrl = item.select("a").first().attr("href");
-                chapterUrls.add("https://www.bqgbb.cc" + charcterUrl);
+                chapterUrls.add("https://www.bq90.cc" + charcterUrl);
             }
         }
         downloadNovel(chapterUrls,id);
