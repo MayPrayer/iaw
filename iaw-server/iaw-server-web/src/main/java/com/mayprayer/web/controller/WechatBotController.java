@@ -12,6 +12,7 @@ import com.mayprayer.web.domain.wechat.WechatBotUserDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageSendDto;
 import com.mayprayer.web.service.chat.BaiduChatApi;
+import com.mayprayer.web.service.novel.BQGService;
 import com.mayprayer.web.service.tool.FreeApiService;
 import com.mayprayer.web.service.tool.MRService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,9 @@ public class WechatBotController {
     @Autowired
    private FreeApiService freeApiService;
 
+    @Autowired
+    private BQGService bqgService;
+
 
     private List<String> blackList = new ArrayList<>();
 
@@ -60,7 +64,8 @@ public class WechatBotController {
         keywords.add("美女视频");
         keywords.add("v50");
         keywords.add("骂人宝典");
-
+        keywords.add("小说搜索");
+        keywords.add("小说下载");
         keywords.add("奖状生成器");
         keywords.add("热映电影");
         keywords.add("星座运势");
@@ -219,7 +224,30 @@ public class WechatBotController {
             String result = freeApiService.getSimpleNews();
             wxBotMessageDto.setType("fileUrl");
             wxBotMessageDto.setContent(result);
-        }else  if ("private".equals(directive)){
+        }else  if ("小说搜索".equals(directive)){
+            if (null==params||params.size()!=1){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            wxBotMessageDto.setContent(bqgService.search(params.get(0)));
+        }else if ("小说下载".equals(directive)){
+            if (null==params||params.size()!=1){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            String download = bqgService.download(params.get(0));
+            if (StrUtil.isBlank(download)){
+                wxBotMessageDto.setContent("小说不存在");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return wxBotMessageDtos;
+            }
+            wxBotMessageDto.setContent("http://124.222.1.218/"+download);
+            wxBotMessageDto.setType("fileUrl");
+        }
+
+        else  if ("private".equals(directive)){
           if (null==params||params.size()!=1){
               wxBotMessageDto.setContent("指令参数有误");
               wxBotMessageDtos.add(wxBotMessageDto);
@@ -295,7 +323,10 @@ public class WechatBotController {
                            "☀️天气预报☀️:生成指定地区10天天气 \n"+
                            "eg:天气预报  武汉              \n\n"+
                            "💄️美女视频💄:生成随机美女视频    \n\n"+
-                           "💄视频搜索💄:视频搜索           \n"+
+                           "💄️小说搜索💄:搜索以及下载笔趣阁小说 \n"+
+                           "eg:小说搜索 我的26岁女房客      \n"+
+                           "eg:小说下载 7800              \n\n"+
+//                           "💄视频搜索💄:视频搜索           \n"+
 //                           "eg:视频搜索 斗罗大陆  即可获取最新集数 \n"+
 //                           "视频搜索 斗罗大陆  集数  即可获取视频链接 \n\n"+
                            "🍗v50🍗: 生成一条疯狂星期四文案  \n\n"+
