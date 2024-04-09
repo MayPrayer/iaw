@@ -7,6 +7,7 @@ import com.mayprayer.common.utils.response.R;
 import com.mayprayer.web.domain.ToolFreeApi;
 import com.mayprayer.web.domain.tool.*;
 import com.mayprayer.web.mapper.ToolFreeApiMapper;
+import com.mayprayer.web.service.novel.BQGService;
 import io.swagger.util.Json;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,9 +51,22 @@ public class FreeApiService {
 
     private   static String COSER_URL=null;
 
+    private  static String  GAME_URL = null;
+
+    private  static String   NOVEL_URL= null;
+
 
     @Autowired
     private ToolFreeApiMapper toolFreeApiMapper;
+
+    @Autowired
+    private MRService mrService;
+
+    @Autowired
+    private BQGService bqgService;
+
+
+
 
 
     @PostConstruct
@@ -67,6 +81,8 @@ public class FreeApiService {
         WHEATHER_URL= apiMap.get("WHEATHER_URL");
         TG_URL= apiMap.get("TG_URL");
         COSER_URL= apiMap.get("COSER_URL");
+        GAME_URL = apiMap.get("GAME_URL");
+        NOVEL_URL = apiMap.get("NOVEL_URL");
     }
 
 
@@ -155,20 +171,34 @@ public class FreeApiService {
         return coserInfoR.getData().getData();
     }
 
+
     /**
      * 骂人宝典
+     * @param level
+     * @return
      */
-    public void getMr() {
-
-
+    public String getMR(String level){
+        return mrService.getRandomMR(level);
     }
 
-    public static void main(String[] args) throws Exception{
 
-
-
-
+    /**
+     * 小说下载
+     * @param param
+     * @param type 1 搜索  2 下载
+     * @return
+     */
+    public String getNovel(String param ,Integer type){
+        if (type==1){
+          return   bqgService.search(param,NOVEL_URL);
+        }else{
+            return   bqgService.download(param,NOVEL_URL);
+        }
     }
+
+
+
+
 
 
 

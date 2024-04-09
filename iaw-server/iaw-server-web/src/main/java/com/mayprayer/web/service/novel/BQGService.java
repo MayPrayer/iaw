@@ -51,7 +51,7 @@ public class BQGService {
     private static final int THREAD_COUNT = 20; // 同时下载的线程数量
 
 
-    public  String  search(String name ){
+    public  String  search(String name ,String url){
 
 
         ChromeOptions options = new ChromeOptions();
@@ -69,7 +69,7 @@ public class BQGService {
         WebDriver driver = new ChromeDriver(options);
 
         // 打开网页
-        driver.get("https://www.bqgbb.cc");
+        driver.get(url);
 
         //输入
         WebElement searchBox  = driver.findElement(By.className("text"));
@@ -109,22 +109,21 @@ public class BQGService {
 
 
 
-    public  String download (String id){
+    public  String download (String id,String url){
 
         List<String> chapterUrls = new ArrayList<>();
-        Document catoroy = Jsoup.parse(HttpUtil.get("https://www.bqgbb.cc/book/"+id+"/"));
+        Document catoroy = Jsoup.parse(HttpUtil.get(url+"/book/"+id+"/"));
         Elements charcters = catoroy.select(".listmain dl dd").removeClass(".more pc_none");
         if (CollectionUtil.isEmpty(charcters)){
             return  null;
         }
         String fileName = catoroy.select(".info h1").first().text()+"_"+System.currentTimeMillis();
-        ;
         MERGED_FILE =NOVEL_FOLDER+fileName+".txt";
         log.info("开始下载");
         if (CollectionUtil.isNotEmpty(charcters)) {
             for (Element item : charcters) {
                 String charcterUrl = item.select("a").first().attr("href");
-                chapterUrls.add("https://www.bqgbb.cc" + charcterUrl);
+                chapterUrls.add(url + charcterUrl);
             }
         }
         downloadNovel(chapterUrls,fileName);
