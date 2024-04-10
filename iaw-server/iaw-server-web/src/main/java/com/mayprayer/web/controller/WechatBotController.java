@@ -12,6 +12,7 @@ import com.mayprayer.web.domain.wechat.WechatBotUserDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageSendDto;
 import com.mayprayer.web.service.chat.BaiduChatApi;
+import com.mayprayer.web.service.game.Switch520Service;
 import com.mayprayer.web.service.novel.BQGService;
 import com.mayprayer.web.service.tool.FreeApiService;
 import com.mayprayer.web.service.tool.MRService;
@@ -44,7 +45,7 @@ public class WechatBotController {
    private FreeApiService freeApiService;
 
     @Autowired
-    private BQGService bqgService;
+    private Switch520Service switch520Service;
 
 
     private List<String> blackList = new ArrayList<>();
@@ -362,6 +363,11 @@ public class WechatBotController {
 
 
 
+    @Anonymous
+    @PostMapping("/downloadGame")
+    public void downloadGame(){
+        switch520Service.downloadGame();
+    }
 
 
 
