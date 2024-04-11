@@ -36,4 +36,11 @@ public class ToolGame extends BaseDomain {
    private String  zipCode;
 
 
+   public String toString(){
+      return "名称：" + name + "\n" +
+               "链接：" + downloadUrl + "\n" +
+               "提取码：" + tqCode + "\n" +
+               "密码：" + zipCode+ "\n\n";
+   }
+
 }

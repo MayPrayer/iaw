@@ -49,11 +49,11 @@ public class BaiduChatApi extends ChatApi{
         BaiduChatMessageDto baiduChatMessageDto = BaiduChatMessageDto.builder().content(words).role("user").build();
 
         List<BaiduChatMessageDto> messages = context.get(userId);
-        if (CollectionUtil.isEmpty(messages)){
+        if (StrUtil.isNotBlank(words)&&CollectionUtil.isEmpty(messages)){
             messages = new ArrayList<>();
             messages.add(baiduChatMessageDto);
         }else{
-            if (!baiduChatMessageDto.getRole().equals(messages.get(messages.size()-1).getRole())){
+            if (StrUtil.isNotBlank(words)&&!baiduChatMessageDto.getRole().equals(messages.get(messages.size()-1).getRole())){
                 messages.add(baiduChatMessageDto);
             }
         }

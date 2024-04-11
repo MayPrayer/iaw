@@ -6,8 +6,9 @@
 
     <sql id="allColumn">
         SELECT id, create_time, create_by, update_time, update_by, is_delete, name, download_url, tq_code, zip_code
-        FROM tool_game;
+        FROM tool_game
     </sql>
+
 
     <resultMap type="ToolGame" id="ToolFreeApiResult">
         <result property="id" column="id" />
@@ -24,10 +25,25 @@
 
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ToolGame">
-        INSERT INTO iaw.tool_game
+        INSERT INTO tool_game
         (name, download_url, tq_code, zip_code)
         VALUES(#{name},#{downloadUrl},#{tqCode},#{zipCode});
     </insert>
+
+
+    <select id="getGameList" resultType="ToolGame">
+        <include refid="allColumn"/>
+        <where>
+            <if test="name!=null and name!=''">
+                name  like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+
+
+
+
 
 
 </mapper>

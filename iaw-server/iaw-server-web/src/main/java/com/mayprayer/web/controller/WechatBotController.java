@@ -62,7 +62,7 @@ public class WechatBotController {
         keywords.add("摸鱼日历");
         keywords.add("美女视频");
         keywords.add("v50");
-        keywords.add("游戏下载");
+        keywords.add("游戏搜索");
         keywords.add("骂人宝典");
         keywords.add("小说搜索");
         keywords.add("小说下载");
@@ -267,8 +267,14 @@ public class WechatBotController {
             wxBotMessageDto.setContent(result);
         }else if ("视频搜索".equals(directive)){
 
-        }else if ("游戏下载".equals(directive)){
-
+        }else if ("游戏搜索".equals(directive)){
+            if (null==params||params.size()==0){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            String result = freeApiService.getGame(params.get(params.size()-1));
+            wxBotMessageDto.setContent(result);
         }
         else if ("骂人宝典".equals(directive)){
             String result =null;

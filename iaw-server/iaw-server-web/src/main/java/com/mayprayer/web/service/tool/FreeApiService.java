@@ -3,10 +3,12 @@ package com.mayprayer.web.service.tool;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.github.pagehelper.PageHelper;
 import com.mayprayer.common.utils.response.R;
 import com.mayprayer.web.domain.ToolFreeApi;
 import com.mayprayer.web.domain.tool.*;
 import com.mayprayer.web.mapper.ToolFreeApiMapper;
+import com.mayprayer.web.mapper.ToolGameMapper;
 import com.mayprayer.web.service.novel.BQGService;
 import io.swagger.util.Json;
 import org.jsoup.Jsoup;
@@ -64,6 +66,10 @@ public class FreeApiService {
 
     @Autowired
     private BQGService bqgService;
+
+    @Autowired
+    private ToolGameMapper toolGameMapper;
+
 
 
 
@@ -197,9 +203,23 @@ public class FreeApiService {
     }
 
 
-
-
-
-
-
+    /**
+     * 游戏搜索
+     * @param s
+     * @return
+     */
+    public String getGame(String s) {
+        PageHelper.startPage(1,20);
+        ToolGame toolGame = new ToolGame();
+        toolGame.setName(s);
+        List<ToolGame> gameList = toolGameMapper.getGameList(toolGame);
+        if (CollectionUtil.isNotEmpty(gameList)){
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ToolGame game:gameList) {
+                stringBuilder.append(game.toString());
+            }
+            return  stringBuilder.toString();
+        }
+        return  "暂无该游戏信息";
+    }
 }
