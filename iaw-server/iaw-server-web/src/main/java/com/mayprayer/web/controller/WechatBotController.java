@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.mayprayer.common.utils.annotations.Anonymous;
 import com.mayprayer.common.utils.constant.Constant;
 import com.mayprayer.web.domain.tool.Directive;
+import com.mayprayer.web.domain.video.VideoInfo;
 import com.mayprayer.web.domain.wechat.WechatBotUserDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageDto;
 import com.mayprayer.web.domain.wechat.WxBotMessageSendDto;
@@ -62,6 +63,7 @@ public class WechatBotController {
         keywords.add("摸鱼日历");
         keywords.add("美女视频");
         keywords.add("v50");
+        keywords.add("视频搜索");
         keywords.add("游戏搜索");
         keywords.add("骂人宝典");
         keywords.add("小说搜索");
@@ -261,13 +263,51 @@ public class WechatBotController {
                 wxBotMessageDtos.add(wxBotMessageDto);
                 return  wxBotMessageDtos;
             }
-            wxBotMessageDto.setContent(freeApiService.getWheather(params.get(params.size()-1)));;
+            wxBotMessageDto.setContent(freeApiService.getWheather(params.get(params.size()-1)));
         }else if ("舔狗日记".equals(directive)){
             String result = freeApiService.getTG();
             wxBotMessageDto.setContent(result);
-        }else if ("视频搜索".equals(directive)){
-
-        }else if ("游戏搜索".equals(directive)){
+        }else if (("视频搜索").equals(directive)){
+            if (null==params||params.size()==0){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            String result =null;
+            if (params.size()==1){
+                List<VideoInfo> videoInfos = freeApiService.searchVideo(params.get(0));
+                if (CollectionUtil.isEmpty(videoInfos)){
+                    result ="暂未搜索到"+params.get(0)+"信息";
+                }else{
+                    StringBuilder builder = new StringBuilder();
+                    builder.append("视频搜索结果如下：\n\n");
+                    for (VideoInfo item:videoInfos) {
+                        builder.append(item.toString());
+                    }
+                    result = builder.toString();
+                }
+                wxBotMessageDto.setContent(result);
+            }else if (params.size()==2 ){
+             WxBotMessageDto   vifMessageDto  = vifParam(params.get(1),wxBotMessageDto);
+                if (null==vifMessageDto){
+                    result = freeApiService.parse(params.get(0),null,Integer.parseInt(params.get(1)));
+                    wxBotMessageDto.setContent(result);
+                }else{
+                    wxBotMessageDtos.add(vifMessageDto);
+                    return  wxBotMessageDtos;
+                }
+            }else if (params.size()==3){
+                WxBotMessageDto   vifMessageDto  = vifParam(params.get(2),wxBotMessageDto);
+                if (null==vifMessageDto){
+                    result = freeApiService.parse(params.get(0),params.get(1),Integer.parseInt(params.get(2)));
+                    wxBotMessageDto.setContent(result);
+                }else{
+                    wxBotMessageDtos.add(vifMessageDto);
+                    return  wxBotMessageDtos;
+                }
+            }
+        }
+        else if ("游戏搜索".equals(directive)){
             if (null==params||params.size()==0){
                 wxBotMessageDto.setContent("指令参数有误");
                 wxBotMessageDtos.add(wxBotMessageDto);
@@ -297,9 +337,10 @@ public class WechatBotController {
             try{
                 if (CollectionUtil.isNotEmpty(params)){
                     num = Integer.parseInt((String) params.get(0));
-                    if(num>10){
-                        wxBotMessageDto.setContent("图片最多不能超过10张");
+                    if(num>1){
+                        wxBotMessageDto.setContent("图片最多不能超过1张");
                         wxBotMessageDtos.add(wxBotMessageDto);
+                        return wxBotMessageDtos;
                     }
                 }
 
@@ -337,15 +378,15 @@ public class WechatBotController {
                            "💄️小说搜索💄:搜索以及下载笔趣阁小说 \n"+
                            "eg:小说搜索 我的26岁女房客      \n"+
                            "eg:小说下载 7800              \n\n"+
-//                           "💄视频搜索💄:视频搜索           \n"+
-//                           "eg:视频搜索 斗罗大陆  即可获取最新集数 \n"+
-//                           "视频搜索 斗罗大陆  集数  即可获取视频链接 \n\n"+
+                           "💄视频搜索💄:视频搜索 (目前支持爱奇艺以及腾讯视频)\n"+
+                           "eg:视频搜索 斗罗大陆  即可获取 相关信息\n"+
+                           "视频搜索 斗罗大陆  集数  即可检索出第一条名称为斗罗大陆 对应集数数据 \n"+
+                           "视频搜索 斗罗大陆  id 集数  即可检索出对应搜索id视频对应集数数据 \n\n"+
                            "🍗v50🍗: 生成一条疯狂星期四文案  \n\n"+
                            "🐶舔狗日记🐶:生成一条舔狗日记    \n\n"+
                            "🐎骂人宝典🐎:生成一条脏话信息    \n"+
                            "eg:骂人宝典  或者 骂人宝典 强    \n\n"+
-                           "🍭随机coser🍭:随机生成指定数量coser图片 \n"+
-                           "eg:随机coser  3 \n\n"+
+                           "🍭随机coser🍭:随机生成一张coser图片 \n\n"+
                            "🤕更多功能🤕:后台留言更多功能     \n"+
                            "eg:更多功能  希望加入定时提醒功能 \n\n"+
                            "🛒菜单🛒:提供指令帮助    \n\n"+
@@ -365,6 +406,24 @@ public class WechatBotController {
 
 
 
+    WxBotMessageDto vifParam(String params,WxBotMessageDto wxBotMessageDto){
+        Integer count= null;
+        try{
+            if (StrUtil.isNotBlank(params)){
+                count = Integer.parseInt((String) params);
+            }
+            if (count<=0){
+                wxBotMessageDto.setContent("不正确的集数");
+                return  wxBotMessageDto;
+            }
+        }catch (Exception e){
+            wxBotMessageDto.setContent("不正确的集数");
+            return  wxBotMessageDto;
+        }
+        return null;
+    }
+
+
 
 
 
@@ -372,9 +431,8 @@ public class WechatBotController {
     @Anonymous
     @PostMapping("/downloadGame")
     public void downloadGame(){
-        switch520Service.downloadGame();
+        freeApiService.parse("诛仙",null,2);
     }
-
 
 
 

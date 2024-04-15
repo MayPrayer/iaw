@@ -1,15 +1,27 @@
 package com.mayprayer.web.service.tool;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.pagehelper.PageHelper;
 import com.mayprayer.common.utils.response.R;
 import com.mayprayer.web.domain.ToolFreeApi;
 import com.mayprayer.web.domain.tool.*;
+import com.mayprayer.web.domain.video.EpisodeInfo;
+import com.mayprayer.web.domain.video.RespIqiyiDto;
+import com.mayprayer.web.domain.video.RespIqiyiVideoInfo;
+import com.mayprayer.web.domain.video.RespSearchIqiyiDto;
+import com.mayprayer.web.domain.video.RespTXDto;
+import com.mayprayer.web.domain.video.RespTXVideoInfo;
+import com.mayprayer.web.domain.video.VideoInfo;
 import com.mayprayer.web.mapper.ToolFreeApiMapper;
 import com.mayprayer.web.mapper.ToolGameMapper;
 import com.mayprayer.web.service.novel.BQGService;
+import com.mayprayer.web.service.platforms.Iqiyi;
+import com.mayprayer.web.service.platforms.TXVideo;
 import io.swagger.util.Json;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -69,6 +81,13 @@ public class FreeApiService {
 
     @Autowired
     private ToolGameMapper toolGameMapper;
+
+
+    @Autowired
+    private Iqiyi iqiyiService;
+
+    @Autowired
+    private TXVideo txVideoService;
 
 
 
@@ -134,7 +153,7 @@ public class FreeApiService {
     public String getSimpleNews(){
         String s = HttpUtil.get(SIMPLE_NEWS);
         Map map = JSONUtil.toBean(s, Map.class);
-        return (String) map.get("image");
+        return (String) map.get("data");
     }
 
     /**
@@ -222,4 +241,94 @@ public class FreeApiService {
         }
         return  "暂无该游戏信息";
     }
+
+
+    /**
+     *
+     * @param name 关键词
+     * @return
+     */
+   public List<VideoInfo> searchVideo(String name){
+       List<VideoInfo>  videoInfos = new ArrayList<>();
+       List<RespSearchIqiyiDto> iqySearchResult = iqiyiService.search(name);
+       List<RespTXDto> txsearchResult = txVideoService.search(name);
+       if (CollectionUtil.isNotEmpty(iqySearchResult)){
+           iqySearchResult.stream().forEach(
+                   e->{
+                       VideoInfo videoInfo =VideoInfo.builder().id(e.getId()).name(e.getG_title()).build();
+                       List<EpisodeInfo>  episodeInfoList =new ArrayList<>();
+                       List<RespIqiyiVideoInfo> videoinfos = e.getVideoinfos();
+                       if (CollectionUtil.isNotEmpty(videoinfos)){
+                           videoinfos.stream().forEach(b->{
+                               EpisodeInfo episodeInfo = EpisodeInfo.builder().name(b.getName()).sort(b.getOrder() + "").url(b.getUrl()).build();
+                               episodeInfoList.add(episodeInfo);
+                           });
+                       }else{
+                           EpisodeInfo episodeInfo = EpisodeInfo.builder().name(e.getG_title()).sort(1+"").url(e.getG_main_link()).build();
+                           episodeInfoList.add(episodeInfo);
+                       }
+                       videoInfo.setEpisodes(episodeInfoList);
+                       videoInfos.add(videoInfo);
+                   }
+           );
+       }
+       if (CollectionUtil.isNotEmpty(txsearchResult)){
+           txsearchResult.stream().forEach(e->{
+               VideoInfo videoInfo =VideoInfo.builder().id(e.getId()).name(e.getName()).build();
+               List<EpisodeInfo>  episodeInfoList =new ArrayList<>();
+               List<RespTXVideoInfo> videoinfos = e.getEpisodeInfoList();
+               videoinfos.stream().forEach(b->{
+                   EpisodeInfo episodeInfo = EpisodeInfo.builder().name(b.getTitle()).sort(b.getTitle()).build();
+                   if (StrUtil.isNotBlank(b.getVideoUrl())){
+                       episodeInfo.setUrl(b.getVideoUrl());
+                   }
+                   if (StrUtil.isNotBlank(b.getUrl())){
+                       episodeInfo.setUrl(b.getUrl());
+                   }
+                   episodeInfoList.add(episodeInfo);
+               });
+               videoInfo.setEpisodes(episodeInfoList);
+               videoInfos.add(videoInfo);
+           });
+       }
+      return  videoInfos;
+   }
+
+   public String parse(String name,String id ,Integer sort){
+       StringBuilder result = new StringBuilder();
+       String url =null;
+       List<VideoInfo> videoInfos= searchVideo(name);
+       VideoInfo videoInfo = null;
+       if (CollectionUtil.isNotEmpty(videoInfos)){
+          if (StrUtil.isBlank(id)){
+              videoInfo = videoInfos.stream().filter(e->e.getName().equals(name)).findFirst().orElse(null);
+          }else{
+              videoInfo =  videoInfos.stream().filter(e->e.getId().equals(id)).findFirst().orElse(null);
+          }
+       }
+
+        if (videoInfo!=null){
+            if (sort<0||sort>videoInfo.getEpisodes().size()){
+                return "视频不存在或者参数不正确";
+            }
+          url=videoInfo.getEpisodes().get(sort-1).getUrl();
+        }
+
+       if (null!=url){
+           result.append("视频搜索数据如下：\n\n");
+           result.append("名称 : "+name+"\n");
+           result.append("集数 : "+sort+"\n\n");
+           result.append("综合 : "+"https://jx.jsonplayer.com/player/?url="+url+"\n\n");
+           result.append("虾米 : "+"https://jx.xmflv.com/?url="+url+"\n\n");
+           result.append("爱豆 : "+"https://jx.aidouer.net/?url="+url+"\n\n");
+           result.append("夜幕 : "+"https://www.yemu.xyz/?url="+url+"\n\n");
+           result.append("m1907(最新) : "+"https://im1907.top/?jx="+url+"\n\n");
+           result.append("冰豆(最新): "+"https://bd.jx.cn/?url="+url+"\n\n");
+           return  result.toString();
+       }
+       return "视频不存在或者参数不正确";
+   }
+
+
+
 }
