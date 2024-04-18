@@ -173,7 +173,8 @@ public class FreeApiService {
      */
     public String getWheather(String info){
         String s = HttpUtil.get(String.format(WHEATHER_URL, info));
-        Weather weather = JSONUtil.toBean(s, Weather.class);
+        R r = JSONUtil.toBean(s, R.class);
+        Weather weather =BeanUtil.toBean(r.getData(),Weather.class,CopyOptions.create().ignoreError());
         return weather.toString();
     }
 

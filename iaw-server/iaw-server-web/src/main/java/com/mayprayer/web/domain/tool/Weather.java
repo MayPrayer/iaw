@@ -21,8 +21,6 @@ import java.util.Map;
 @Builder
 public class Weather {
 
-    String code;
-    String msg ;
 
     String city;
 
@@ -33,10 +31,12 @@ public class Weather {
     public String toString() {
         StringBuilder resultBuiler = new StringBuilder("");
         for (Map<String,String> dateWeather : data ){
-            resultBuiler.append("日期："+dateWeather.get("date")+"\n"+
-                                "天气情况:"+dateWeather.get("cap")+"\n"+
-                                "最高气温:"+dateWeather.get("highTemp")+"\n"+
-                                "最低气温:"+dateWeather.get("lowTemp")+"\n"+"\n\n");
+            resultBuiler.append("日期：   "+dateWeather.get("date")+"\n"+
+                                "天气情况："+dateWeather.get("weather")+"\n"+
+                                "气温：   "+dateWeather.get("temperature")+"\n"+
+                                "风力：   "+dateWeather.get("wind")+"\n"+
+                                "空气质量："+dateWeather.get("wind")+"\n\n");
+
         }
         return "地区："+city+"\n\n"+resultBuiler.toString();
 

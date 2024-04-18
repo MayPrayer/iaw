@@ -34,8 +34,9 @@
     <select id="getGameList" resultType="ToolGame">
         <include refid="allColumn"/>
         <where>
+            download_url !='' and  tq_code!='' and zip_code!=''
             <if test="name!=null and name!=''">
-                name  like CONCAT('%',#{name},'%')
+               and  name  like CONCAT('%',#{name},'%')
             </if>
         </where>
     </select>
