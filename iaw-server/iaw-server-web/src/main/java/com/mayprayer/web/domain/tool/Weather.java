@@ -32,9 +32,9 @@ public class Weather {
         StringBuilder resultBuiler = new StringBuilder("");
         for (Map<String,String> dateWeather : data ){
             resultBuiler.append("日期：   "+dateWeather.get("date")+"\n"+
-                                "天气情况："+dateWeather.get("weather")+"\n"+
                                 "气温：   "+dateWeather.get("temperature")+"\n"+
                                 "风力：   "+dateWeather.get("wind")+"\n"+
+                                "天气情况："+dateWeather.get("weather")+"\n"+
                                 "空气质量："+dateWeather.get("wind")+"\n\n");
 
         }
