@@ -90,6 +90,10 @@ public class FreeApiService {
     private TXVideo txVideoService;
 
 
+    @Autowired
+    private MoYuService moYuService;
+
+
 
 
 
@@ -130,10 +134,8 @@ public class FreeApiService {
      * 摸鱼日历
      */
     public String getMYDate() {
-        String s = HttpUtil.get(MY_DATE_URL);
-        R result = JSONUtil.toBean(s, R.class);
-        Map<String, String> map = (Map<String, String>) result.getData();
-        return map.get("moyu_url");
+        String s = moYuService.search(MY_DATE_URL);
+        return s;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.mayprayer.web.controller;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -19,6 +20,7 @@ import com.mayprayer.web.service.tool.FreeApiService;
 import com.mayprayer.web.service.tool.MRService;
 import lombok.extern.slf4j.Slf4j;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -110,7 +112,7 @@ public class WechatBotController {
         List<WxBotMessageDto> messageDto = new ArrayList<>();
         WxBotMessageDto chatMessage = new WxBotMessageDto();
         String userNickName = null;
-        if (null != wechatBotUserDto.getRoom()) {
+        if (null != wechatBotUserDto.getRoom()&&StrUtil.isNotBlank(wechatBotUserDto.getRoom().getId())) {
             Directive directive = containDirective(content.trim());
             if (isMentioned.equals(Constant.INT_YES + "")) {
                 chatMessage.setContent(baiduChatApi.reply(content,wechatBotUserDto.getRoom().getId()+"_"+wechatBotUserDto.getFrom().getId()));
@@ -218,7 +220,7 @@ public class WechatBotController {
         }else  if ("摸鱼日历".equals(directive)){
             String result = freeApiService.getMYDate();
             wxBotMessageDto.setType("fileUrl");
-            wxBotMessageDto.setContent(result);
+            wxBotMessageDto.setContent("http://124.222.1.218/"+result);
         }else  if ("v50".equals(directive)){
             String result = freeApiService.getKFC();
             wxBotMessageDto.setContent(result);
@@ -434,7 +436,6 @@ public class WechatBotController {
     public void downloadGame(){
         freeApiService.parse("诛仙",null,2);
     }
-
 
 
 

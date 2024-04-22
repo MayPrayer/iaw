@@ -33,6 +33,12 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+        </dependency>
+
+
 
     </dependencies>
 
