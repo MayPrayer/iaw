@@ -27,7 +27,10 @@ public class MoYuService {
         if (CollectionUtil.isNotEmpty(pElements)){
             for (Element item: pElements) {
                 if (item.attr("style").equals("text-align: center;")){
-                   href = item.select("img").first().attr("data-src");
+                    Element img = item.select("img").first();
+                    if (null!=img){
+                        href =img.attr("data-src");
+                    }
                 }
             }
         }
@@ -43,7 +46,10 @@ public class MoYuService {
     }
 
 
-
+    public static void main(String[] args) {
+        MoYuService moYuService = new MoYuService();
+        moYuService.search("https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzAxOTYyMzczNA==&action=getalbum&album_id=2190548434338807809");
+    }
 
 
 

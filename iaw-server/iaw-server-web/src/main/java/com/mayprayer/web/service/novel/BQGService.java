@@ -55,7 +55,7 @@ public class BQGService {
 
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // 启用无头模式
+        options.addArguments("--headless=new"); // 启用无头模式
         options.addArguments("--disable-gpu"); // 禁用GPU加速，可提高稳定性
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--no-sandbox");

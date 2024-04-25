@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Controller
@@ -62,6 +64,7 @@ public class WechatBotController {
     public void init (){
         blackList.add("微信团队");
         keywords.add("菜单");
+        keywords.add("抖音解析");
         keywords.add("摸鱼日历");
         keywords.add("美女视频");
         keywords.add("v50");
@@ -97,12 +100,7 @@ public class WechatBotController {
     public void reply(@RequestParam("type") String type, @RequestParam("content") String content,
                       @RequestParam("source") String source, @RequestParam("isMentioned") String isMentioned,
                       @RequestParam("isMsgFromSelf") String isMsgFromSelf) {
-        log.info("type: " + type + "\n");
         log.info("content: " + content + "\n");
-        log.info("source: " + source + "\n");
-        log.info("isMentioned: " + isMentioned + "\n");
-        log.info("isMsgFromSelf: " + isMsgFromSelf + "\n");
-
         //首先看有没有被@
         content = content.replace("@三昧", "").trim();
 
@@ -112,6 +110,9 @@ public class WechatBotController {
         List<WxBotMessageDto> messageDto = new ArrayList<>();
         WxBotMessageDto chatMessage = new WxBotMessageDto();
         String userNickName = null;
+
+        content = CollectContent(content);
+        log.info("处理完之后的内容为："+content);
         if (null != wechatBotUserDto.getRoom()&&StrUtil.isNotBlank(wechatBotUserDto.getRoom().getId())) {
             Directive directive = containDirective(content.trim());
             if (isMentioned.equals(Constant.INT_YES + "")) {
@@ -146,6 +147,34 @@ public class WechatBotController {
         }
         sendMsg(messageDto,messageSendDto);
     }
+
+
+    /**
+     * 提取指令
+     * @return
+     */
+    String CollectContent(String content){
+        if (content.contains(Constant.DouYin)){
+            String urlRegex = "\\b(?:https?|http):\\/\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+
+            // 编译正则表达式
+            Pattern pattern = Pattern.compile(urlRegex);
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                String url = matcher.group();
+                content ="抖音解析"+" "+url;
+            }
+        }
+        return  content;
+    }
+
+    public static void main(String[] args) {
+        String  doyyin = "8.79 复制打开抖音，看看【程序员牛牛的作品】压力给到写Java的# 程序员 # 编程 # it... https://v.douyin.com/iYv3a4xM/ 08/01 b@a.AT XMJ:/";
+        WechatBotController wechatBotController = new WechatBotController();
+        System.out.println(wechatBotController.CollectContent(doyyin));
+
+    }
+
 
     /**
      *
@@ -326,7 +355,16 @@ public class WechatBotController {
                 result =  freeApiService.getMR(params.get(0));
             }
             wxBotMessageDto.setContent(result);
-        }else if ("更多功能".equals(directive)){
+        }else if ("抖音解析".equals(directive)){
+            if (null==params||params.size()!=1){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            String result = freeApiService.getDouYinVideo(params.get(0));
+            wxBotMessageDto.setType("fileUrl");
+            wxBotMessageDto.setContent(result);
+        } else if ("更多功能".equals(directive)){
             wxBotMessageDto.setIsToMaster(true);
             wxBotMessageDto.setContent(directiveObj.getContent());
         }else if ("随机coser".equals(directive)){

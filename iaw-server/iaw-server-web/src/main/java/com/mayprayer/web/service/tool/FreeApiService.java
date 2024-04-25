@@ -20,6 +20,7 @@ import com.mayprayer.web.domain.video.VideoInfo;
 import com.mayprayer.web.mapper.ToolFreeApiMapper;
 import com.mayprayer.web.mapper.ToolGameMapper;
 import com.mayprayer.web.service.novel.BQGService;
+import com.mayprayer.web.service.platforms.DouYin;
 import com.mayprayer.web.service.platforms.Iqiyi;
 import com.mayprayer.web.service.platforms.TXVideo;
 import io.swagger.util.Json;
@@ -92,6 +93,9 @@ public class FreeApiService {
 
     @Autowired
     private MoYuService moYuService;
+
+    @Autowired
+    private DouYin douYinService;
 
 
 
@@ -333,5 +337,12 @@ public class FreeApiService {
    }
 
 
+    /**
+     * 抖音视频
+     * @param s
+     */
+    public String getDouYinVideo(String s) {
+        return  douYinService.parse(s);
+    }
 
 }

@@ -25,5 +25,8 @@ public class Constant {
    public static  final  String  LOGIN_USER_FOLDER = "LoginUser:";
 
 
+   public static final  String DouYin =  "https://v.douyin.com/";
+
+
 
 }
