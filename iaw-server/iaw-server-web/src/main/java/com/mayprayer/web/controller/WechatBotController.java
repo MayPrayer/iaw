@@ -46,6 +46,15 @@ public class WechatBotController {
     @Value("${wx.sendApi}")
     private  String wxSendApi;
 
+    @Value("${wx.robotname}")
+    private String robotName;
+
+    @Value("${domain}")
+    private String domain;
+
+    @Value("${wx.token}")
+    private String token ;
+
     @Autowired
    private FreeApiService freeApiService;
 
@@ -102,7 +111,7 @@ public class WechatBotController {
                       @RequestParam("isMsgFromSelf") String isMsgFromSelf) {
         log.info("content: " + content + "\n");
         //首先看有没有被@
-        content = content.replace("@三昧", "").trim();
+        content = content.replace("@"+robotName, "").trim();
 
         WechatBotUserDto wechatBotUserDto = JSONUtil.toBean(source, WechatBotUserDto.class, true);
 
@@ -168,13 +177,6 @@ public class WechatBotController {
         return  content;
     }
 
-    public static void main(String[] args) {
-        String  doyyin = "8.79 复制打开抖音，看看【程序员牛牛的作品】压力给到写Java的# 程序员 # 编程 # it... https://v.douyin.com/iYv3a4xM/ 08/01 b@a.AT XMJ:/";
-        WechatBotController wechatBotController = new WechatBotController();
-        System.out.println(wechatBotController.CollectContent(doyyin));
-
-    }
-
 
     /**
      *
@@ -194,7 +196,7 @@ public class WechatBotController {
                 WxBotMessageSendDto toMasterMsgDto = new WxBotMessageSendDto();
                 toMasterMsgDto.setData(toMasterMsgList);
                 toMasterMsgDto.setTo("凉秋");
-                HttpUtil.post(wxSendApi, JSONUtil.toJsonStr(toMasterMsgDto));
+                HttpUtil.post(String.format(wxSendApi,domain,token), JSONUtil.toJsonStr(toMasterMsgDto));
             }
             msgList.add(messageDto);
         }
@@ -202,7 +204,7 @@ public class WechatBotController {
 
         String jsonStr = JSONUtil.toJsonStr(messageSendDto);
         log.info("发送消息内容为:"+jsonStr);
-        String post = HttpUtil.post(wxSendApi, jsonStr);
+        String post =  HttpUtil.post(String.format(wxSendApi,domain,token), jsonStr);
         log.info("发送消息结果为：" + post);
 
     }
@@ -467,13 +469,6 @@ public class WechatBotController {
 
 
 
-
-
-    @Anonymous
-    @PostMapping("/downloadGame")
-    public void downloadGame(){
-        freeApiService.parse("诛仙",null,2);
-    }
 
 
 

@@ -46,10 +46,7 @@ public class MoYuService {
     }
 
 
-    public static void main(String[] args) {
-        MoYuService moYuService = new MoYuService();
-        moYuService.search("https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzAxOTYyMzczNA==&action=getalbum&album_id=2190548434338807809");
-    }
+
 
 
 

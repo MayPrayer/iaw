@@ -55,15 +55,15 @@ public class BQGService {
 
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new"); // 启用无头模式
+//        options.addArguments("--headless"); // 启用无头模式
         options.addArguments("--disable-gpu"); // 禁用GPU加速，可提高稳定性
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
         // 指定 Chrome 驱动程序路径
-//        System.setProperty("webdriver.chrome.driver", "D:/chromedriver-win64/chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "D:/chromedriver-win64/chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
 
         // 初始化 Chrome WebDriver，并设置选项
         WebDriver driver = new ChromeDriver(options);
@@ -196,9 +196,10 @@ public class BQGService {
     }
 
 
-
-
-
+    public static void main(String[] args) {
+        BQGService bqgService = new BQGService();
+        System.out.println(bqgService.search("世界上最爱我的人","https://www.bqgbb.cc"));
+    }
 
 
 
