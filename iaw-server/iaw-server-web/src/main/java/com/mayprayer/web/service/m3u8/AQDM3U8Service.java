@@ -198,7 +198,7 @@ public class AQDM3U8Service {
 
 
     void getM3u8() throws  Exception{
-        String s = HttpUtil.get("https://cdn.aqd-tv.com/video/9887ce63/playlist/9887ce63.m3u8");
+        String s = HttpUtil.get("https://hls.vdtuzv.com/videos3/9adc333c48f34e2178a549f707663aa4/9adc333c48f34e2178a549f707663aa4.m3u8?auth_key=1717584895-666043ff6b879-0-b7e30c5606f53f83744ca90632e24d8c&v=2");
         //一行读取
         String[] lines = s.split("\n");
         AtomicInteger count = new AtomicInteger();

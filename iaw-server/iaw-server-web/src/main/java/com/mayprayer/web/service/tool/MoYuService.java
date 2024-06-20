@@ -2,6 +2,7 @@ package com.mayprayer.web.service.tool;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -10,6 +11,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,16 +25,12 @@ public class MoYuService {
         String moyuContent= wxDoc.select(".album__list-item").first().attr("data-link");
         moyuContent = moyuContent.replace("http","https");
         String s = HttpUtil.get(moyuContent);
-        Elements pElements = Jsoup.parse(s).select("p");
+        Elements imgElements = Jsoup.parse(s).select("p img");
         String href = "";
-        if (CollectionUtil.isNotEmpty(pElements)){
-            for (Element item: pElements) {
-                if (item.attr("style").equals("text-align: center;")){
-                    Element img = item.select("img").first();
-                    if (null!=img){
-                        href =img.attr("data-src");
-                    }
-                }
+        if (CollectionUtil.isNotEmpty(imgElements)){
+            Element element = imgElements.stream().filter(e -> "540".equals(e.attr("data-w"))).findFirst().orElse(null);
+            if (null!=element){
+                href =element.attr("data-src");
             }
         }
         String fileName = System.currentTimeMillis()+".jpg";
@@ -43,6 +42,12 @@ public class MoYuService {
             log.error("图片压缩失败"+e);
         }
         return fileName;
+    }
+
+
+    public static void main(String[] args) {
+        MoYuService muu  = new MoYuService();
+        muu.search("https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzAxOTYyMzczNA==&action=getalbum&album_id=2190548434338807809");
     }
 
 

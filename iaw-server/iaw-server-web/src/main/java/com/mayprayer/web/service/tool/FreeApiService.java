@@ -3,6 +3,8 @@ package com.mayprayer.web.service.tool;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -24,6 +26,7 @@ import com.mayprayer.web.service.platforms.DouYin;
 import com.mayprayer.web.service.platforms.Iqiyi;
 import com.mayprayer.web.service.platforms.TXVideo;
 import io.swagger.util.Json;
+import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -70,6 +73,8 @@ public class FreeApiService {
 
     private  static String   NOVEL_URL= null;
 
+    private static  String ZB_URL = null;
+
 
     @Autowired
     private ToolFreeApiMapper toolFreeApiMapper;
@@ -97,6 +102,9 @@ public class FreeApiService {
     @Autowired
     private DouYin douYinService;
 
+    @Autowired
+    private ZBService zbService;
+
 
 
 
@@ -116,6 +124,7 @@ public class FreeApiService {
         COSER_URL= apiMap.get("COSER_URL");
         GAME_URL = apiMap.get("GAME_URL");
         NOVEL_URL = apiMap.get("NOVEL_URL");
+        ZB_URL =apiMap.get("ZB_URL");
     }
 
 
@@ -222,7 +231,7 @@ public class FreeApiService {
      */
     public String getNovel(String param ,Integer type){
         if (type==1){
-          return   bqgService.search(param,NOVEL_URL);
+               return   bqgService.search(param,NOVEL_URL);
         }else{
             return   bqgService.download(param,NOVEL_URL);
         }
@@ -338,11 +347,11 @@ public class FreeApiService {
 
 
     /**
-     * 抖音视频
-     * @param s
+     * 算命
+     * @param
      */
-    public String getDouYinVideo(String s) {
-        return  douYinService.parse(s);
+    public String getZB(Integer year ,Integer month,Integer day,Integer hour,String sex ) {
+        return zbService.search(year ,month,day,hour,sex,ZB_URL);
     }
 
 }

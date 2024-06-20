@@ -3,6 +3,7 @@ package com.mayprayer.web.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -58,8 +59,6 @@ public class WechatBotController {
     @Autowired
    private FreeApiService freeApiService;
 
-    @Autowired
-    private Switch520Service switch520Service;
 
 
     private List<String> blackList = new ArrayList<>();
@@ -73,7 +72,6 @@ public class WechatBotController {
     public void init (){
         blackList.add("微信团队");
         keywords.add("菜单");
-        keywords.add("抖音解析");
         keywords.add("摸鱼日历");
         keywords.add("美女视频");
         keywords.add("v50");
@@ -82,15 +80,10 @@ public class WechatBotController {
         keywords.add("骂人宝典");
         keywords.add("小说搜索");
         keywords.add("小说下载");
-        keywords.add("奖状生成器");
         keywords.add("热映电影");
-        keywords.add("星座运势");
-        keywords.add("奖状生成器");
-        keywords.add("绘图");
-        keywords.add("一笔签名");
+        keywords.add("算命");
         keywords.add("新闻简报");
         keywords.add("天气预报");
-        keywords.add("段子");
         keywords.add("舔狗日记");
         keywords.add("随机coser");
         keywords.add("更多功能");
@@ -110,6 +103,7 @@ public class WechatBotController {
                       @RequestParam("source") String source, @RequestParam("isMentioned") String isMentioned,
                       @RequestParam("isMsgFromSelf") String isMsgFromSelf) {
         log.info("content: " + content + "\n");
+        log.info("source: " + source + "\n");
         //首先看有没有被@
         content = content.replace("@"+robotName, "").trim();
 
@@ -120,8 +114,6 @@ public class WechatBotController {
         WxBotMessageDto chatMessage = new WxBotMessageDto();
         String userNickName = null;
 
-        content = CollectContent(content);
-        log.info("处理完之后的内容为："+content);
         if (null != wechatBotUserDto.getRoom()&&StrUtil.isNotBlank(wechatBotUserDto.getRoom().getId())) {
             Directive directive = containDirective(content.trim());
             if (isMentioned.equals(Constant.INT_YES + "")) {
@@ -158,24 +150,7 @@ public class WechatBotController {
     }
 
 
-    /**
-     * 提取指令
-     * @return
-     */
-    String CollectContent(String content){
-        if (content.contains(Constant.DouYin)){
-            String urlRegex = "\\b(?:https?|http):\\/\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 
-            // 编译正则表达式
-            Pattern pattern = Pattern.compile(urlRegex);
-            Matcher matcher = pattern.matcher(content);
-            while (matcher.find()) {
-                String url = matcher.group();
-                content ="抖音解析"+" "+url;
-            }
-        }
-        return  content;
-    }
 
 
     /**
@@ -251,7 +226,7 @@ public class WechatBotController {
         }else  if ("摸鱼日历".equals(directive)){
             String result = freeApiService.getMYDate();
             wxBotMessageDto.setType("fileUrl");
-            wxBotMessageDto.setContent("http://124.222.1.218/"+result);
+            wxBotMessageDto.setContent("http://"+domain+"/"+result);
         }else  if ("v50".equals(directive)){
             String result = freeApiService.getKFC();
             wxBotMessageDto.setContent(result);
@@ -279,7 +254,7 @@ public class WechatBotController {
                 wxBotMessageDtos.add(wxBotMessageDto);
                 return wxBotMessageDtos;
             }
-            wxBotMessageDto.setContent("http://124.222.1.218/"+download);
+            wxBotMessageDto.setContent("http://"+domain+"/"+download);
             wxBotMessageDto.setType("fileUrl");
         }
 
@@ -349,6 +324,41 @@ public class WechatBotController {
             String result = freeApiService.getGame(params.get(params.size()-1));
             wxBotMessageDto.setContent(result);
         }
+        else if ("算命".equals(directive)){
+            if (null==params||params.size()!=5){
+                wxBotMessageDto.setContent("指令参数有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            Integer year=null;
+            Integer month=null;
+            Integer day=null;
+            Integer hour=null;
+            String sex =null;
+            try{
+                year = Integer.parseInt(params.get(0));
+                month = Integer.parseInt(params.get(1));
+                day = Integer.parseInt(params.get(2));
+                hour = Integer.parseInt(params.get(3));
+                sex = params.get(4);
+                Validator.validateBirthday(year + "-" + month + "-" + day + "", "错误的日期");
+                if (hour<0||hour>24){
+                    throw  new Exception("时间异常");
+                }
+                if (!"男".equals(sex)&&!"女".equals(sex)){
+                    throw  new Exception("性别异常");
+                }
+            }catch (Exception e){
+                wxBotMessageDto.setContent("参数输入有误");
+                wxBotMessageDtos.add(wxBotMessageDto);
+                return  wxBotMessageDtos;
+            }
+            String download = freeApiService.getZB(year,month,day,hour,sex);
+            if (StrUtil.isNotBlank(download)){
+                wxBotMessageDto.setContent("http://"+domain+"/"+download);
+                wxBotMessageDto.setType("fileUrl");
+            }
+        }
         else if ("骂人宝典".equals(directive)){
             String result =null;
             if (CollectionUtil.isEmpty(params)){
@@ -356,15 +366,6 @@ public class WechatBotController {
             }else{
                 result =  freeApiService.getMR(params.get(0));
             }
-            wxBotMessageDto.setContent(result);
-        }else if ("抖音解析".equals(directive)){
-            if (null==params||params.size()!=1){
-                wxBotMessageDto.setContent("指令参数有误");
-                wxBotMessageDtos.add(wxBotMessageDto);
-                return  wxBotMessageDtos;
-            }
-            String result = freeApiService.getDouYinVideo(params.get(0));
-            wxBotMessageDto.setType("fileUrl");
             wxBotMessageDto.setContent(result);
         } else if ("更多功能".equals(directive)){
             wxBotMessageDto.setIsToMaster(true);
@@ -417,6 +418,8 @@ public class WechatBotController {
                            "☀️天气预报☀️:生成指定地区10天天气 \n"+
                            "eg:天气预报  武汉              \n\n"+
                            "💄️美女视频💄:生成随机美女视频    \n\n"+
+                           "🤡算命🤡:生成算命信息    \n"+
+                           "eg:算命 1996 8 31 9           \n\n"+
                            "[咖啡]小说搜索[咖啡]:搜索以及下载笔趣阁小说 \n"+
                            "eg:小说搜索 我的26岁女房客      \n"+
                            "eg:小说下载 7800              \n\n"+

@@ -1,27 +1,21 @@
 package com.mayprayer.web.service.novel;
 
-import cn.hutool.core.bean.BeanUtil;
+
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.http.HttpResponse;
+
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
-import com.mayprayer.web.domain.tool.NovelInfo;
+
+import com.mayprayer.web.service.ChromeService;
+import com.microsoft.playwright.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverLogLevel;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -50,44 +44,29 @@ public class BQGService {
     private static  String MERGED_FILE =null; // 合并后的文件名
     private static final int THREAD_COUNT = 20; // 同时下载的线程数量
 
+    @Autowired
+    private ChromeService chromeService;
+
 
     public  String  search(String name ,String url){
-
-
-        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless"); // 启用无头模式
-        options.addArguments("--disable-gpu"); // 禁用GPU加速，可提高稳定性
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-
-        // 指定 Chrome 驱动程序路径
-        System.setProperty("webdriver.chrome.driver", "D:/chromedriver-win64/chromedriver.exe");
-//        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-
-        // 初始化 Chrome WebDriver，并设置选项
-        WebDriver driver = new ChromeDriver(options);
-
-        // 打开网页
-        driver.get(url);
+        Browser browser = chromeService.getInstance();
+        Page page = browser.newPage();
+        page.navigate(url);
 
         //输入
-        WebElement searchBox  = driver.findElement(By.className("text"));
-        searchBox.sendKeys(name);
-
+        page.fill(".text",name);
         //点击查询
-        WebElement searchButton = driver.findElement(By.className("btn"));
-        searchButton.click();
+        page.click(".btn");
         try{
-            Thread.sleep(5000);
+            page.waitForTimeout(2000);
         }catch (Exception e){
-        }
 
-        String s = driver.getPageSource();
-        Document searchTable = Jsoup.parse(s);
+        }
+        Document searchTable = Jsoup.parse(page.content());
         Elements bookboxs = searchTable.select(".bookbox");
         StringBuilder builder = new StringBuilder();
         if (CollectionUtil.isEmpty(bookboxs)){
+            page.close();
             return "暂无该小说信息";
         }
         for (Element item : bookboxs){
@@ -100,7 +79,7 @@ public class BQGService {
             builder.append(author+"\n\n");
         }
         // 关闭浏览器
-        driver.quit();
+        page.close();
         return  "搜索信息如下:\n\n"+builder.toString();
     }
 
@@ -198,7 +177,7 @@ public class BQGService {
 
     public static void main(String[] args) {
         BQGService bqgService = new BQGService();
-        System.out.println(bqgService.search("世界上最爱我的人","https://www.bqgbb.cc"));
+        System.out.println(bqgService.search("鸡公煲","https://www.bqgbb.cc"));
     }
 
 
